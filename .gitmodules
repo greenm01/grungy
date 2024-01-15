@@ -1,0 +1,6 @@
+[submodule "ui/wcwidth"]
+	path = ui/wcwidth
+	url = https://github.com/greenm01/wcwidth.git
+[submodule "ui/wordwrap"]
+	path = ui/wordwrap
+	url = https://github.com/greenm01/wordwrap.git
