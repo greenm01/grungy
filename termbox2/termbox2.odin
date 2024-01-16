@@ -1,19 +1,23 @@
 package termbox2
 
-import "core:c"
-
 foreign import termbox2 "libtermbox2.a"
 
-Input_Mode :: distinct int
-Output_Mode :: distinct int
-Event_Type :: distinct u8
-Modifier :: distinct u8
-Key :: distinct u16
-Attribute :: distinct u64
+Input_Mode :: int
+Output_Mode :: int
+Event_Type :: u8
+Modifier :: u8
+Key :: u16
+Attribute :: u64
+
+/* Event types (tb_event.type) */
+EVENT_KEY: Event_Type : 1
+EVENT_RESIZE: Event_Type : 2
+EVENT_MOUSE: Event_Type : 3
 
 /* ASCII key constants (tb_event.key) */
 KEY_CTRL_TI: Key : 0x00
 KEY_CTRL_2: Key : 0x00 /* clash with 'CTRL_TILDE'     */
+KEY_CTRL_SPACE: Key : 0x00
 KEY_CTRL_A: Key : 0x01
 KEY_CTRL_B: Key : 0x02
 KEY_CTRL_C: Key : 0x03
@@ -84,12 +88,14 @@ KEY_ARROW_DOWN: Key : (0xffff - 19)
 KEY_ARROW_LEFT: Key : (0xffff - 20)
 KEY_ARROW_RIGHT: Key : (0xffff - 21)
 KEY_BACK_TAB: Key : (0xffff - 22)
-KEY_MOUSE_LEFT: Key : (0xffff - 23)
-KEY_MOUSE_RIGHT: Key : (0xffff - 24)
-KEY_MOUSE_MIDDLE: Key : (0xffff - 25)
-KEY_MOUSE_RELEASE: Key : (0xffff - 26)
-KEY_MOUSE_WHEEL_UP: Key : (0xffff - 27)
-KEY_MOUSE_WHEEL_DOWN: Key : (0xffff - 28)
+
+/* Mouse buttons */
+MOUSE_LEFT: Key : (0xffff - 23)
+MOUSE_RIGHT: Key : (0xffff - 24)
+MOUSE_MIDDLE: Key : (0xffff - 25)
+MOUSE_RELEASE: Key : (0xffff - 26)
+MOUSE_WHEEL_UP: Key : (0xffff - 27)
+MOUSE_WHEEL_DOWN: Key : (0xffff - 28)
 
 /* Colors (numeric) and attributes (bitwise) (tb_cell.fg, tb_cell.bg) */
 DEFAULT: Attribute : 0x0000
@@ -122,11 +128,6 @@ UNDERLINE_2: Attribute : 0x0000000200000000
 OVERLINE: Attribute : 0x0000000400000000
 INVISIBLE: Attribute : 0x0000000800000000
 
-/* Event types (tb_event.type) */
-EVENT_KEY: Event_Type : 1
-EVENT_RESIZE: Event_Type : 2
-EVENT_MOUSE: Event_Type : 3
-
 /* Key modifiers (bitwise) (tb_event.mod) */
 MOD_ALT: Modifier : 1
 MOD_CTRL: Modifier : 2
@@ -148,31 +149,31 @@ OUTPUT_GRAYSCALE: Output_Mode : 4
 OUTPUT_TRUECOLOR: Output_Mode : 5
 
 Event :: struct {
-	type: c.uint8_t, /* one of EVENT_* constants */
-	mod:  c.uint8_t, /* bitwise MOD_* constants */
-	key:  c.uint16_t, /* one of KEY_* constants */
-	ch:   c.uint32_t, /* a Unicode code point */
-	w:    c.int32_t, /* resize width */
-	h:    c.int32_t, /* resize height */
-	x:    c.int32_t, /* mouse x */
-	y:    c.int32_t, /* mouse y */
+	type: Event_Type, /* one of EVENT_* constants */
+	mod:  Modifier, /* bitwise MOD_* constants */
+	key:  Key, /* one of KEY_* constants */
+	ch:   u32, /* a Unicode code point */
+	w:    int, /* resize width */
+	h:    int, /* resize height */
+	x:    int, /* mouse x */
+	y:    int, /* mouse y */
 }
 
 @(link_prefix = "tb_")
 foreign termbox2 {
-	init :: proc() -> c.int ---
-	shutdown :: proc() -> c.int ---
-	width :: proc() -> c.int ---
-	height :: proc() -> c.int ---
-	clear :: proc() -> c.int ---
-	present :: proc() -> c.int ---
-	set_cursor :: proc(cx, xy: c.int) -> c.int ---
-	hide_cursor :: proc() -> c.int ---
-	set_cell :: proc(x, y: c.int, ch: c.uint32_t, fg, bg: c.uint64_t) -> c.int ---
-	peek_event :: proc(event: ^Event, timeout_ms: c.int) -> c.int ---
-	poll_event :: proc(event: ^Event) -> c.int ---
-	print :: proc(x, y: c.int, fg, bg: c.uint64_t, #c_vararg str: ..any) -> c.int ---
-	printf :: proc(x, y: c.int, fg, bg: c.uint64_t, #c_vararg fmt: ..any) -> c.int ---
-	set_input_mode :: proc(mode: c.int) -> c.int ---
-	set_output_mode :: proc(mode: c.int) -> c.int ---
+	init :: proc() -> int ---
+	shutdown :: proc() -> int ---
+	width :: proc() -> int ---
+	height :: proc() -> int ---
+	clear :: proc() -> int ---
+	present :: proc() -> int ---
+	set_cursor :: proc(cx, xy: int) -> int ---
+	hide_cursor :: proc() -> int ---
+	set_cell :: proc(x, y: int, ch: u32, fg, bg: u64) -> int ---
+	peek_event :: proc(event: ^Event, timeout_ms: int) -> int ---
+	poll_event :: proc(event: ^Event) ---
+	print :: proc(x, y: int, fg, bg: u64, #c_vararg str: ..any) -> int ---
+	printf :: proc(x, y: int, fg, bg: u64, #c_vararg fmt: ..any) -> int ---
+	set_input_mode :: proc(mode: int) -> int ---
+	set_output_mode :: proc(mode: int) -> int ---
 }

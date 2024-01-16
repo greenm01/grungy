@@ -3,9 +3,9 @@ package ui
 import "core:fmt"
 import "core:os"
 
-import tb "termbox2"
+import tb "../termbox2"
 
-init :: proc() {
+init :: proc() -> int {
 
 	ret := tb.init()
 
@@ -17,7 +17,7 @@ init :: proc() {
 
 	tb.set_input_mode(tb.INPUT_ESC)
 	tb.set_output_mode(tb.OUTPUT_256)
-
+	return ret
 }
 
 close :: proc() {
