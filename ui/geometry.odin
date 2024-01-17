@@ -8,6 +8,11 @@ pt :: proc(x, y: int) -> Point {
 	return Point{x, y}
 }
 
+pt_in :: proc(p: Point, r: Rectangle) -> bool {
+	return r.min.x <= p.x && p.x < r.max.x &&
+		r.min.y <= p.y && p.y < r.max.y
+}
+
 pt_sub :: proc(p, q: Point) -> Point {
 	return Point{p.x - q.x, p.y - q.y}
 }

@@ -4,27 +4,27 @@
 
 package ui
 
-/* List of available widgets:
-
-	- Paragraph
-
-*/
+/* List of vailable widgets. Add new ones to the union */
+Widgets :: union {
+	Paragraph,
+}
 
 /* ##########################
  * #### PARAGRAPH WIDGET ####
  * ########################## */
 
 Paragraph :: struct {
-	using block: Block,
+	using block: ^Block,
 	text:        string,
 	text_style:  Style,
 	wrap_text:   bool,
 }
 
-new_paragraph :: proc() -> Block {
+new_paragraph :: proc(txt: string) -> ^Block {
 	b := new_block()
-	b.derived = Paragraph {
+	b.widget = Paragraph {
 		block      = b,
+		text       = txt,
 		text_style = theme.paragraph.text,
 		wrap_text  = true,
 	}

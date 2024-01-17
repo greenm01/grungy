@@ -32,3 +32,11 @@ terminal_dimensions :: proc() -> (width: int, height: int) {
 clear :: proc() {
 	tb.clear()
 }
+
+present :: proc() {
+	tb.present()
+}
+
+tb_set_cell :: proc(x, y: int, ch: rune, fg, bg: Color) -> int {
+	return tb.set_cell(x, y, u32(ch), u64(fg), u64(bg))
+}

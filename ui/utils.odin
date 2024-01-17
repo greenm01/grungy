@@ -132,12 +132,14 @@ wrap_cells :: proc(cells: []Cell, width: uint) -> []Cell {
 	str := cells_to_string(cells)
 	wrapped := wordwrap.wrap_string(str, width)
 	wrapped_cells := make([]Cell, len(wrapped))
-	for _rune, i in wrapped {
+	i: int
+	for _rune in wrapped {
 		if _rune == '\n' {
 			wrapped_cells[i] = Cell{_rune, STYLE_CLEAR}
 		} else {
 			wrapped_cells[i] = Cell{_rune, cells[i].style}
 		}
+		i += 1
 	}
 	return wrapped_cells
 }

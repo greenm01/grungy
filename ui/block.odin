@@ -8,6 +8,7 @@ package ui
 // Block manages size, position, border, and title.
 // It implements all 3 of the methods needed for the `Drawable` interface.
 // Custom widgets will override the Draw method.
+
 Block :: struct {
 	border:                                                   bool,
 	border_style:                                             Style,
@@ -17,25 +18,24 @@ Block :: struct {
 	inner:                                                    Rectangle,
 	title:                                                    string,
 	title_style:                                              Style,
-	derived:                                                  any,
 	drawable:                                                 bool,
+	widget:                                                   Widgets,
 }
 
-new_block :: proc() -> Block {
-	return(
-		Block {
-			border = true,
-			border_style = theme.block.border,
-			border_left = true,
-			border_right = true,
-			border_top = true,
-			border_bottom = true,
-			title_style = theme.block.title,
-		} 
-	)
+new_block :: proc() -> ^Block {
+	b := &Block {
+		border = true,
+		border_style = theme.block.border,
+		border_left = true,
+		border_right = true,
+		border_top = true,
+		border_bottom = true,
+		title_style = theme.block.title,
+	} 
+	return b
 }
 
-draw_border :: proc(b: Block, buf: ^Buffer) {
+draw_border :: proc(b: ^Block, buf: ^Buffer) {
 	vertical_cell := Cell{VERTICAL_LINE, b.border_style}
 	horizontal_cell := Cell{HORIZONTAL_LINE, b.border_style}
 
@@ -69,7 +69,7 @@ draw_border :: proc(b: Block, buf: ^Buffer) {
 }
 
 // Draw implements the Drawable interface.
-draw_block :: proc(b: Block, buf: ^Buffer) {
+draw_block :: proc(b: ^Block, buf: ^Buffer) {
 	if b.border do draw_border(b, buf)
 	set_string(buf, b.title, b.title_style, Point{b.min.x + 2, b.min.y})
 }
@@ -86,7 +86,7 @@ set_rect :: proc(b: ^Block, x1, y1, x2, y2: int) {
 }
 
 // GetRect implements the Drawable interface.
-get_rect :: proc(b: Block) -> Rectangle {
+get_rect :: proc(b: ^Block) -> Rectangle {
 	return b.rectangle
 }
 				

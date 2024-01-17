@@ -3,7 +3,7 @@ package ui
 // Color is an integer from -1 to 255
 // -1 = ColorClear
 // 0-255 = Xterm colors
-Color :: distinct int
+Color :: int
 
 // ColorClear clears the Fg or Bg color of a Style
 COLOR_CLEAR: Color : -1
@@ -18,7 +18,7 @@ MAGENTA: Color : 5
 CYAN: Color : 6
 WHITE: Color : 7
 
-Modifier :: distinct uint
+Modifier :: uint
 
 // ModifierClear clears any modifiers
 MOD_CLEAR: Modifier : 0

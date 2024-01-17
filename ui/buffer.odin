@@ -23,8 +23,8 @@ new_cell :: proc(r: rune, style := STYLE_CLEAR) -> Cell {
 
 // Buffer represents a section of a terminal and is a renderable rectangle of cells.
 Buffer :: struct {
-	rec:      Rectangle,
-	cell_map: map[Point]Cell,
+	rectangle: Rectangle,
+	cell_map:  map[Point]Cell,
 }
 
 new_buffer :: proc(r: Rectangle) -> ^Buffer {
