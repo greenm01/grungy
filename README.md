@@ -1,7 +1,7 @@
 # grungy
 A work in progress (WIP) text user interface (TUI) for the terminal in Odin lang.
 
-Based off of [termui](https://github.com/gizak/termui) using [termbox2](https://github.com/termbox/termbox2) on the backend.
+Based off of [termui](https://github.com/gizak/termui), using [termbox2](https://github.com/termbox/termbox2) on the backend.
 
 TODO (short term):
   1) Finish implementing all the widgets from termui
