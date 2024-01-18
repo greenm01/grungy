@@ -164,11 +164,10 @@ trim_cells :: proc(cells: []Cell, w: int) -> []Cell {
 	s = trim_string(s, w)
 	runes := utf8.string_to_runes(s)
 	new_cells := make([]Cell, len(runes))
-	defer delete(new_cells)
 	for r, i in runes {
 		new_cells[i] = Cell{r, cells[i].style}
 	}
-	return new_cells[:]
+	return new_cells
 }
 
 split_cells :: proc(cells: []Cell, r: rune) -> [dynamic][dynamic]Cell {

@@ -10,8 +10,9 @@ main :: proc() {
 	}
 	defer ui.close()
 
-	text := "Hello world!\nPress a key to quit..."
+	text := "\nPress a key to quit..."
 	p := ui.new_paragraph(text)
+	p.title = " Hello World! "
 	ui.set_rect(p, 0, 0, 25, 5)
 	
 	ui.render(p^)
