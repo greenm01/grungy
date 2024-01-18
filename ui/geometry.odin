@@ -31,10 +31,10 @@ rect :: proc(x0, y0, x1, y1: int) -> Rectangle {
 	return Rectangle{p1, p2}
 }
 
-dx :: proc(r: Rectangle) -> int {
+rect_dx :: proc(r: Rectangle) -> int {
 	return r.max.x - r.min.x
 }
 
-dy :: proc(r: Rectangle) -> int {
+rect_dy :: proc(r: Rectangle) -> int {
 	return r.max.y - r.min.y
 }

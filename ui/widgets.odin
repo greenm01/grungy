@@ -1,12 +1,21 @@
-// Copyright 2017 Zack Guo <zack.y.guo@gmail.com>. All rights reserved.
-// Use of this source code is governed by a MIT license that can
-// be found in the LICENSE file.
-
 package ui
 
-/* List of vailable widgets. Add new ones to the union */
+/* ####################################################
+ * To add a new widget do two things:
+ *     1) Add the widget struct to the Widgets union.
+ *     2) Add the widget's draw procedure to the draw
+ *        virtual procedure table.
+ * #################################################### */
+
+// Available widgets. 
 Widgets :: union {
 	Paragraph,
+}
+
+// Virtual procuedure table for drawing
+draw :: proc {
+	draw_block,     // don't remove this one
+	draw_paragraph,
 }
 
 /* ##########################
@@ -35,7 +44,7 @@ draw_paragraph :: proc(p: Paragraph, buf: ^Buffer) {
 	draw_block(p.block, buf)
 	cells := parse_styles(p.text, p.text_style)
 	if p.wrap_text {
-		cells = wrap_cells(cells, dx(p.inner))
+		cells = wrap_cells(cells, rect_dx(p.inner))
 	}
 	
 	rows := split_cells(cells, '\n')
@@ -43,10 +52,10 @@ draw_paragraph :: proc(p: Paragraph, buf: ^Buffer) {
 		if y + p.inner.min.y >= p.inner.max.y {
 			break
 		}
-		r := trim_cells(row[:], dx(p.inner))
+		r := trim_cells(row[:], rect_dx(p.inner))
 		for cx in build_cell_with_xarray(r) {
 			x, cell := cx.x, cx.cell
-			set_cell(buf, cell, pt_add(pt(x, y), p.inner.min))
+			buffer_set_cell(buf, cell, pt_add(pt(x, y), p.inner.min))
 		} 
 	} 
 }

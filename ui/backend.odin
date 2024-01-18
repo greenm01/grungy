@@ -38,6 +38,6 @@ present :: proc() {
 	tb.present()
 }
 
-tb_set_cell :: proc(x, y: int, ch: rune, fg, bg: Color) -> int {
+set_cell :: proc(x, y: int, ch: rune, fg, bg: Color) -> int {
 	return int(tb.set_cell(i32(x), i32(y), u32(ch), u16(fg), u16(bg)))
 }

@@ -1,7 +1,3 @@
-// Copyright 2017 Zack Guo <zack.y.guo@gmail.com>. All rights reserved.
-// Use of this source code is governed by a MIT license that can
-// be found in the LICENSE file.
-
 package ui
 
 // Block is the base struct inherited by most widgets.
@@ -40,37 +36,73 @@ draw_border :: proc(b: ^Block, buf: ^Buffer) {
 
 	// draw lines
 	if b.border_top {
-		fill(buf, horizontal_cell, rect(b.min.x, b.min.y, b.max.x, b.min.y + 1))
+		buffer_fill(
+			buf, horizontal_cell,
+			rect(b.min.x, b.min.y, b.max.x, b.min.y + 1)
+		)
 	}
 	if b.border_bottom {
-		fill(buf, horizontal_cell, rect(b.min.x, b.max.y - 1, b.max.x, b.max.y))
+		buffer_fill(
+			buf,
+			horizontal_cell,
+			rect(b.min.x, b.max.y - 1, b.max.x, b.max.y)
+		)
 	}
 	if b.border_left {
-		fill(buf, vertical_cell, rect(b.min.x, b.min.y, b.min.x + 1, b.max.y))
+		buffer_fill(
+			buf,
+			vertical_cell,
+			rect(b.min.x, b.min.y, b.min.x + 1, b.max.y)
+		)
 	}
 	if b.border_right {
-		fill(buf, vertical_cell, rect(b.max.x - 1, b.min.y, b.max.x, b.max.y))
+		buffer_fill(
+			buf,
+			vertical_cell, 
+			rect(b.max.x - 1, b.min.y, b.max.x, b.max.y)
+		)
 	}
 
 	// draw corners
 	if b.border_top && b.border_left {
-		set_cell(buf, Cell{TOP_LEFT, b.border_style}, b.min)
+		buffer_set_cell(
+			buf,
+			Cell{TOP_LEFT, b.border_style}, 
+			b.min
+		)
 	}
 	if b.border_top && b.border_right {
-		set_cell(buf, Cell{TOP_RIGHT, b.border_style}, pt(b.max.x - 1, b.min.y))
+		buffer_set_cell(
+			buf,
+			Cell{TOP_RIGHT, b.border_style},
+			pt(b.max.x - 1, b.min.y)
+		)
 	}
 	if b.border_bottom && b.border_left {
-		set_cell(buf, Cell{BOTTOM_LEFT, b.border_style}, pt(b.min.x, b.max.y - 1))
+		buffer_set_cell(
+			buf,
+			Cell{BOTTOM_LEFT, b.border_style},
+			pt(b.min.x, b.max.y - 1)
+		)
 	}
 	if b.border_bottom && b.border_right {
-		set_cell(buf, Cell{BOTTOM_RIGHT, b.border_style}, pt_sub(b.max, pt(1, 1)))
+		buffer_set_cell(
+			buf,
+			Cell{BOTTOM_RIGHT, b.border_style},
+			pt_sub(b.max, pt(1, 1))
+		)
 	}
 }
 
 // Draw implements the Drawable interface.
 draw_block :: proc(b: ^Block, buf: ^Buffer) {
 	if b.border do draw_border(b, buf)
-	set_string(buf, b.title, b.title_style, Point{b.min.x + 2, b.min.y})
+	buffer_set_string(
+		buf,
+		b.title,
+		b.title_style,
+		Point{b.min.x + 2, b.min.y}
+	)
 }
 
 // SetRect implements the Drawable interface.
