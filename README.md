@@ -13,5 +13,6 @@ TODO (longer term):
   1) Implement the [State Action Model (SAM) API](https://www.infoq.com/articles/no-more-mvc-frameworks/)
   2) Look to [ratatui](https://github.com/ratatui-org/ratatui), [FTXui](https://github.com/ArthurSonzogni/FTXUI), and [others](https://github.com/charmbracelet/bubbletea) for potential improvements
   3) Consider replacing termbox2 with a pure Odin terminal library
+  4) Cross platform support (currently only works on Linux)
 
 This project was originally created to support my text based multiplayer game [Esterian Conquest](https://github.com/greenm01/esterian-conquest) 
