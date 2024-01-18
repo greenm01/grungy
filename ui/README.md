@@ -6,6 +6,6 @@ wcwidth and wordwrap added as git submodules
       ```
 
   2) Pull new changes:
-    ```
-    git submodule update --remote --merge
-    ```
+      ```
+      git submodule update --remote --merge
+      ```
