@@ -6,7 +6,7 @@ Based off of [termui](https://github.com/gizak/termui) and built on top of [term
 TODO (short term):
   1) Finish implementing all the widgets from termui
   2) Finish examples from termui
-  3) Update this readme with schreenshots
+  3) Update this readme with screenshots
   4) Documentation
 
 TODO (longer term):
