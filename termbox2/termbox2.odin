@@ -1,13 +1,15 @@
 package termbox2
 
+import "core:c"
+
 foreign import termbox2 "libtermbox2.a"
 
-Input_Mode :: int
-Output_Mode :: int
-Event_Type :: u8
-Modifier :: u8
-Key :: u16
-Attribute :: u64
+Input_Mode :: c.int
+Output_Mode :: c.int
+Event_Type :: c.uint8_t
+Modifier :: c.uint8_t
+Key :: c.uint16_t
+Attribute :: c.uint64_t
 
 /* Event types (tb_event.type) */
 EVENT_KEY: Event_Type : 1
@@ -148,32 +150,62 @@ OUTPUT_216: Output_Mode : 3
 OUTPUT_GRAYSCALE: Output_Mode : 4
 OUTPUT_TRUECOLOR: Output_Mode : 5
 
+/* Common function return values unless otherwise noted.
+ *
+ * Library behavior is undefined after receiving TB_ERR_MEM. Callers may
+ * attempt reinitializing by freeing memory, invoking tb_shutdown, then
+ * tb_init.
+ */
+OK                   :: 0
+ERR                  :: -1
+ERR_NEED_MORE        :: -2
+ERR_INIT_ALREADY     :: -3
+ERR_INIT_OPEN        :: -4
+ERR_MEM              :: -5
+ERR_NO_EVENT         :: -6
+ERR_NO_TERM          :: -7
+ERR_NOT_INIT         :: -8
+ERR_OUT_OF_BOUNDS    :: -9
+ERR_READ             :: -10
+ERR_RESIZE_IOCTL     :: -11
+ERR_RESIZE_PIPE      :: -12
+ERR_RESIZE_SIGACTION :: -13
+ERR_POLL             :: -14
+ERR_TCGETATTR        :: -15
+ERR_TCSETATTR        :: -16
+ERR_UNSUPPORTED_TERM :: -17
+ERR_RESIZE_WRITE     :: -18
+ERR_RESIZE_POLL      :: -19
+ERR_RESIZE_READ      :: -20
+ERR_RESIZE_SSCANF    :: -21
+ERR_CAP_COLLISION    :: -22
+
 Event :: struct {
 	type: Event_Type, /* one of EVENT_* constants */
 	mod:  Modifier, /* bitwise MOD_* constants */
 	key:  Key, /* one of KEY_* constants */
-	ch:   u32, /* a Unicode code point */
-	w:    int, /* resize width */
-	h:    int, /* resize height */
-	x:    int, /* mouse x */
-	y:    int, /* mouse y */
+	ch:   c.uint32_t, /* a Unicode code point */
+	w:    c.int32_t, /* resize width */
+	h:    c.int32_t, /* resize height */
+	x:    c.int32_t, /* mouse x */
+	y:    c.int32_t, /* mouse y */
 }
 
 @(link_prefix = "tb_")
 foreign termbox2 {
-	init :: proc() -> int ---
-	shutdown :: proc() -> int ---
-	width :: proc() -> int ---
-	height :: proc() -> int ---
-	clear :: proc() -> int ---
-	present :: proc() -> int ---
-	set_cursor :: proc(cx, xy: int) -> int ---
-	hide_cursor :: proc() -> int ---
-	set_cell :: proc(x, y: int, ch: u32, fg, bg: u64) -> int ---
-	peek_event :: proc(event: ^Event, timeout_ms: int) -> int ---
-	poll_event :: proc(event: ^Event) ---
-	print :: proc(x, y: int, fg, bg: u64, #c_vararg str: ..any) -> int ---
-	printf :: proc(x, y: int, fg, bg: u64, #c_vararg fmt: ..any) -> int ---
-	set_input_mode :: proc(mode: int) -> int ---
-	set_output_mode :: proc(mode: int) -> int ---
+	init :: proc() -> c.int ---
+	shutdown :: proc() -> c.int ---
+	width :: proc() -> c.int ---
+	height :: proc() -> c.int ---
+	clear :: proc() -> c.int ---
+	present :: proc() -> c.int ---
+	set_cursor :: proc(cx, xy: c.int) -> c.int ---
+	hide_cursor :: proc() -> c.int ---
+	set_cell :: proc(x, y: c.int, ch: c.uint32_t, fg, bg: c.uint16_t) -> c.int ---
+	peek_event :: proc(event: ^Event, timeout_ms: c.int) -> c.int ---
+	poll_event :: proc(event: ^Event) -> c.int ---
+	print :: proc(x, y: c.int, fg, bg: c.uint16_t, #c_vararg str: ..any) -> c.int ---
+	printf :: proc(x, y: c.int, fg, bg: c.uint16_t, #c_vararg fmt: ..any) -> c.int ---
+	set_input_mode :: proc(mode: c.int) -> c.int ---
+	set_output_mode :: proc(mode: c.int) -> c.int ---
 }

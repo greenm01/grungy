@@ -78,12 +78,6 @@ parse_styles :: proc(s: string, default_style: Style) -> []Cell {
 		square_count: int,
 	}
 
-	del_parser :: proc(p: ^Parser) {
-		delete(p.cells)
-		delete(p.styled_text)
-		delete(p.style_items)
-	}
-
 	p := Parser {
 		make([dynamic]Cell),
 		utf8.string_to_runes(s),
@@ -92,7 +86,6 @@ parse_styles :: proc(s: string, default_style: Style) -> []Cell {
 		make([dynamic]rune),
 		0,
 	}
-	defer del_parser(&p)
 
 	reset :: proc(p: ^Parser) {
 		clear_dynamic_array(&p.styled_text)

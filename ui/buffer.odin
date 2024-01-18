@@ -27,10 +27,10 @@ Buffer :: struct {
 	cell_map:  map[Point]Cell,
 }
 
-new_buffer :: proc(r: Rectangle) -> ^Buffer {
+new_buffer :: proc(r: Rectangle) -> Buffer {
 	buf := Buffer{r, make(map[Point]Cell)}
 	fill(&buf, CELL_CLEAR, r) // clears out area
-	return &buf
+	return buf
 }
 
 get_cell :: proc(b: ^Buffer, p: Point) -> Cell {

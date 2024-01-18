@@ -4,26 +4,21 @@
 
 package ui
 
-import "core:fmt"
-
 draw :: proc {
 	draw_block,
 	draw_paragraph,
 }
 
-render :: proc(items: ..^Block) {
+render :: proc(items: ..Block) {
 	clear()
 	for item in items {
-		buf := new_buffer(get_rect(item))
+		buf := new_buffer(item.rectangle)
 		para := item.widget.(Paragraph)
-		draw(para, buf)
-		fmt.println("draw")
+		draw(para, &buf)
 		for point, cell in buf.cell_map {
-			fmt.println(point)
 			if pt_in(point, buf.rectangle) {
 				fg := (cell.style.fg+1)|int(cell.style.modifier)
 				bg := cell.style.bg+1
-				fmt.println("foo")  
 				tb_set_cell(point.x, point.y, cell._rune, fg, bg)
 			}
 		}

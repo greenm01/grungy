@@ -2,6 +2,7 @@ package ui
 
 import "core:fmt"
 import "core:os"
+import "core:c"
 
 import tb "../termbox2"
 
@@ -17,7 +18,7 @@ init :: proc() -> int {
 
 	tb.set_input_mode(tb.INPUT_ESC)
 	tb.set_output_mode(tb.OUTPUT_256)
-	return ret
+	return int(ret)
 }
 
 close :: proc() {
@@ -38,5 +39,5 @@ present :: proc() {
 }
 
 tb_set_cell :: proc(x, y: int, ch: rune, fg, bg: Color) -> int {
-	return tb.set_cell(x, y, u32(ch), u64(fg), u64(bg))
+	return int(tb.set_cell(i32(x), i32(y), u32(ch), u16(fg), u16(bg)))
 }

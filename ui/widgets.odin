@@ -32,23 +32,21 @@ new_paragraph :: proc(txt: string) -> ^Block {
 }
 
 draw_paragraph :: proc(p: Paragraph, buf: ^Buffer) {
-	draw(p.block, buf)
-
+	draw_block(p.block, buf)
 	cells := parse_styles(p.text, p.text_style)
 	if p.wrap_text {
-		cells = wrap_cells(cells, uint(dx(p.inner)))
+		cells = wrap_cells(cells, dx(p.inner))
 	}
-
+	
 	rows := split_cells(cells, '\n')
-
 	for row, y in rows {
 		if y + p.inner.min.y >= p.inner.max.y {
 			break
 		}
-		rows[y] = trim_cells(row, dx(p.inner))
-		for cx, _ in build_cell_with_xarray(row) {
+		r := trim_cells(row[:], dx(p.inner))
+		for cx in build_cell_with_xarray(r) {
 			x, cell := cx.x, cx.cell
 			set_cell(buf, cell, pt_add(pt(x, y), p.inner.min))
-		}
-	}
+		} 
+	} 
 }

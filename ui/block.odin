@@ -23,15 +23,14 @@ Block :: struct {
 }
 
 new_block :: proc() -> ^Block {
-	b := &Block {
-		border = true,
-		border_style = theme.block.border,
-		border_left = true,
-		border_right = true,
-		border_top = true,
-		border_bottom = true,
-		title_style = theme.block.title,
-	} 
+	b := new(Block)
+	b.border = true
+	b.border_style = theme.block.border
+	b.border_left = true
+	b.border_right = true
+	b.border_top = true
+	b.border_bottom = true
+	b.title_style = theme.block.title
 	return b
 }
 

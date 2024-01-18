@@ -96,10 +96,12 @@ new_event :: proc($T: typeid, type: Event_Type, id: string) -> ^Event {
 
 // PollEvents gets events from termbox, converts them, then sends them to each of its channels.
 // TODO: make multi-threaded?
-poll_event :: proc(e: ^tb.Event) -> ^Event {
-	tb.poll_event(e)
-	ch := convert_termbox_event(e)
-	return ch
+poll_event :: proc() -> ^Event {
+	e := new(tb.Event)
+	if tb.poll_event(e) == tb.OK {
+		return convert_termbox_event(e)
+	}
+	return new(Event)
 }
 
 keyboard_map := map[tb.Key]string {
@@ -200,7 +202,7 @@ convert_termbox_mouse_event :: proc(e: ^tb.Event) -> ^Event {
 		converted = "Unknown_Mouse_Button"
 	}
 	drag := e.mod == tb.MOD_MOTION
-	return new_mouse_event(converted, e.x, e.y, drag)
+	return new_mouse_event(converted, int(e.x), int(e.y), drag)
 }
 
 // convertTermboxEvent turns a termbox event into a grungy event.
@@ -216,7 +218,7 @@ convert_termbox_event :: proc(e: ^tb.Event) -> ^Event {
 	case tb.EVENT_MOUSE:
 		return convert_termbox_mouse_event(e)
 	case tb.EVENT_RESIZE:
-		return new_resize_event(e.w, e.h)
+		return new_resize_event(int(e.w), int(e.h))
 	}
 	return new(Event)
 }

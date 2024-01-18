@@ -128,18 +128,16 @@ min_int :: proc(x, y: int) -> int {
 // []Cell ----------------------------------------------------------------------
 
 // WrapCells takes []Cell and inserts Cells containing '\n' wherever a linebreak should go.
-wrap_cells :: proc(cells: []Cell, width: uint) -> []Cell {
+wrap_cells :: proc(cells: []Cell, width: int) -> []Cell {
 	str := cells_to_string(cells)
-	wrapped := wordwrap.wrap_string(str, width)
+	wrapped := wordwrap.wrap_string(str, uint(width))
 	wrapped_cells := make([]Cell, len(wrapped))
-	i: int
-	for _rune in wrapped {
+	for _rune, i in wrapped {
 		if _rune == '\n' {
 			wrapped_cells[i] = Cell{_rune, STYLE_CLEAR}
 		} else {
 			wrapped_cells[i] = Cell{_rune, cells[i].style}
 		}
-		i += 1
 	}
 	return wrapped_cells
 }
@@ -173,22 +171,18 @@ trim_cells :: proc(cells: []Cell, w: int) -> []Cell {
 	return new_cells[:]
 }
 
-split_cells :: proc(cells: []Cell, r: rune) -> [][]Cell {
-	left: [dynamic]Cell
-	defer delete(left)
+split_cells :: proc(cells: []Cell, r: rune) -> [dynamic][dynamic]Cell {
+	split_cells: [dynamic][dynamic]Cell
 	temp: [dynamic]Cell
-	defer delete(temp)
-	for cell in cells {
+	for cell, i in cells {
 		if cell._rune == r {
-			append(&left, ..temp[:])
+			append(&split_cells, temp)
 			clear_dynamic_array(&temp)
 		} else {
-			append(&temp, cell)
+			append(&temp, cells[i])
 		}
 	}
-
-	split_cells := [][]Cell{left[:], temp[:]}
-
+	if len(temp) > 0 do append(&split_cells, temp)
 	return split_cells
 }
 

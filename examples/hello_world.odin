@@ -10,16 +10,15 @@ main :: proc() {
 	}
 	defer ui.close()
 
-	text := "Hello world!"
+	text := "Hello world!\nPress a key to quit..."
 	p := ui.new_paragraph(text)
 	ui.set_rect(p, 0, 0, 25, 5)
-
-	ui.render(p)
-	/*
-	for e in ui.poll_events() {
-		if e.type == ui.KeyboardEvent {
-			break
-		}
+	
+	ui.render(p^)
+	
+	for {
+		event := ui.poll_event()
+		if event.type == ui.Event_Type.Keyboard_Event do break
 	}
-	*/
+	
 }
