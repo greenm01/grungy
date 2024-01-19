@@ -3,10 +3,16 @@ package ui
 render :: proc(items: ..Block) {
 	clear()
 	for item in items {
-		widget: Paragraph
-		widget = item.widget.? // type inference magic
 		buf := new_buffer(item.rectangle)
-		draw(widget, &buf)
+
+		// Add new widgets here
+		switch w in item.widget {
+		case Paragraph:
+			draw_paragraph(w, &buf)
+		case Table:
+			draw_table(w, &buf)
+		}
+		
 		for point, cell in buf.cell_map {
 			if pt_in(point, buf.rectangle) {
 				set_cell(

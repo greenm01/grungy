@@ -1,23 +1,15 @@
 package ui
 
-/* ####################################################
- * To add a new widget do two things:
+/* ######################################################
+ * To add a new widget, remember to do two things:
  *     1) Add the widget struct to the Widgets union.
- *     2) Add the widget's draw procedure to the draw
- *        virtual procedure table.
- * #################################################### */
+ *     2) Add the widget's type to the render procedure
+ * ###################################################### */
 
 // Available widgets. 
 Widgets :: union {
 	Paragraph,
 	Table,
-}
-
-// Virtual procuedure table for drawing
-draw :: proc {
-	draw_block,     // don't remove this one
-	draw_paragraph,
-	draw_table,
 }
 
 /* ##########################
@@ -39,7 +31,6 @@ new_paragraph :: proc(txt: string) -> ^Block {
 		text_style = theme.paragraph.text,
 		wrap_text  = true,
 	}
-	b.widget_type = Rectangle
 	return b
 }
 
@@ -100,7 +91,6 @@ new_table :: proc() -> ^Block {
 		row_styles =     make(map[int]Style),
 		column_resizer = proc() -> bool {return false}  
 	}
-	b.widget_type = Table
 	return b
 }
 

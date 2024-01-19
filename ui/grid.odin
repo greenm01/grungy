@@ -4,7 +4,7 @@ Grid_Item_Type :: distinct uint
 
 COL: Grid_Item_Type : 0
 ROW: Grid_Item_Type : 1
-
+/*
 Grid :: struct {
 	using block: ^Block,
 	items:       []^Grid_Item,
