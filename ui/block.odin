@@ -16,6 +16,7 @@ Block :: struct {
 	title_style:                                              Style,
 	drawable:                                                 bool,
 	widget:                                                   Widgets,
+	widget_type:                                              typeid,
 }
 
 new_block :: proc() -> ^Block {

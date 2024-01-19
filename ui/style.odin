@@ -1,5 +1,7 @@
 package ui
 
+Alignment :: enum {Align_Left, Align_Center, Align_Right}
+
 // Color is an integer from -1 to 255
 // -1 = ColorClear
 // 0-255 = Xterm colors

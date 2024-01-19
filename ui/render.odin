@@ -3,7 +3,8 @@ package ui
 render :: proc(items: ..Block) {
 	clear()
 	for item in items {
-		widget := item.widget.? // type inference magic
+		widget: Paragraph
+		widget = item.widget.? // type inference magic
 		buf := new_buffer(item.rectangle)
 		draw(widget, &buf)
 		for point, cell in buf.cell_map {
