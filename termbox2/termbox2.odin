@@ -117,18 +117,15 @@ LIGHT_MAGENTA: Attribute : 0x0013
 LIGHT_CYAN: Attribute : 0x0014
 LIGHT_GRAY: Attribute : 0x0015
 
-BOLD: Attribute : 0x01000000
-UNDERLINE: Attribute : 0x02000000
-REVERSE: Attribute : 0x04000000
-ITALIC: Attribute : 0x08000000
-BLINK: Attribute : 0x10000000
-HI_BLACK: Attribute : 0x20000000
-BRIGHT: Attribute : 0x40000000
-DIM: Attribute : 0x80000000
-STRIKEOUT: Attribute : 0x0000000100000000
-UNDERLINE_2: Attribute : 0x0000000200000000
-OVERLINE: Attribute : 0x0000000400000000
-INVISIBLE: Attribute : 0x0000000800000000
+MOD_CLEAR: Attribute : 0x0000
+BOLD: Attribute : 0x0100
+UNDERLINE: Attribute : 0x0200
+REVERSE: Attribute : 0x0400
+ITALIC: Attribute : 0x0800
+BLINK: Attribute : 0x1000
+HI_BLACK: Attribute : 0x2000
+BRIGHT: Attribute : 0x4000
+DIM: Attribute : 0x8000
 
 /* Key modifiers (bitwise) (tb_event.mod) */
 MOD_ALT: Modifier : 1

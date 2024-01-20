@@ -27,7 +27,7 @@ parser_color_map := map[string]Color {
 	"cyan"    = CYAN,
 	"yellow"  = YELLOW,
 	"white"   = WHITE,
-	"clear"   = COLOR_CLEAR,
+	"clear"   = DEFAULT,
 	"green"   = GREEN,
 	"magenta" = MAGENTA,
 }

@@ -8,8 +8,8 @@ package ui
 
 // Available widgets. 
 Widgets :: union {
-	Paragraph,
-	Table,
+	^Paragraph,
+	^Table,
 }
 
 /* ##########################
@@ -23,18 +23,17 @@ Paragraph :: struct {
 	wrap_text:   bool,
 }
 
-new_paragraph :: proc(txt: string) -> ^Block {
+new_paragraph :: proc() -> (paragraph: ^Paragraph) {
 	b := new_block()
-	b.widget = Paragraph {
-		block      = b,
-		text       = txt,
-		text_style = theme.paragraph.text,
-		wrap_text  = true,
-	}
-	return b
+	paragraph = new(Paragraph)
+	paragraph.block = b
+	paragraph.text_style = theme.paragraph.text
+	paragraph.wrap_text = true
+	b.widget = paragraph
+	return
 }
 
-draw_paragraph :: proc(p: Paragraph, buf: ^Buffer) {
+draw_paragraph :: proc(p: ^Paragraph, buf: ^Buffer) {
 	draw_block(p.block, buf)
 	cells := parse_styles(p.text, p.text_style)
 	if p.wrap_text {
@@ -74,7 +73,7 @@ Table :: struct {
 	column_widths:  []int,
 	text_style:     Style,
 	row_separator:  bool,
-	text_alignment: Alignment,
+	text_alignment: int,
 	row_styles:     map[int]Style,
 	fill_row:       bool,
 
@@ -82,19 +81,19 @@ Table :: struct {
 	column_resizer: proc() -> bool, 
 }
 
-new_table :: proc() -> ^Block {
+new_table :: proc() -> (table: ^Table) {
 	b := new_block()
-	b.widget = Table{
-		block =          b,
-		text_style =     theme.table.text,
-		row_separator =  true,
-		row_styles =     make(map[int]Style),
-		column_resizer = proc() -> bool {return false}  
-	}
-	return b
+	table = new(Table)
+	table.block = b
+	table.text_style = theme.table.text
+	table.row_separator = true
+	table.row_styles = make(map[int]Style)
+	table.column_resizer = proc() -> bool {return false}  
+	b.widget = table
+	return 
 }
 
-draw_table :: proc(t: Table, buf: ^Buffer) {
+draw_table :: proc(t: ^Table, buf: ^Buffer) {
 	draw_block(t.block, buf)
 
 	t.column_resizer()
@@ -103,6 +102,7 @@ draw_table :: proc(t: Table, buf: ^Buffer) {
 	if len(column_widths) == 0 {
 		column_count := len(t.rows[0])
 		column_width := rect_dx(t.inner) / column_count
+		column_widths = make([]int, column_count)
 		for i := 0; i < column_count; i += 1 {
 			column_widths[i] = column_width
 		}
@@ -126,13 +126,11 @@ draw_table :: proc(t: Table, buf: ^Buffer) {
 			buffer_fill(buf, blank_cell, rect(t.inner.min.x, y_coordinate, t.inner.max.x, y_coordinate+1))
 		}
 
-		using Alignment
-		
 		// draw row cells
 		for j := 0; j < len(row); j += 1 {
 			col := parse_styles(row[j], row_style)
 			// draw row cell
-			if len(col) > column_widths[j] || t.text_alignment == Align_Left {
+			if len(col) > column_widths[j] || t.text_alignment == ALIGN_LEFT {
 				for cx in build_cell_with_xarray(col) {
 					k, cell := cx.x, cx.cell
 					if k == column_widths[j] || col_x_coordinate+k == t.inner.max.x {
@@ -143,14 +141,14 @@ draw_table :: proc(t: Table, buf: ^Buffer) {
 						buffer_set_cell(buf, cell, pt(col_x_coordinate+k, y_coordinate))
 					}
 				}
-			} else if t.text_alignment == Align_Center {
+			} else if t.text_alignment == ALIGN_CENTER {
 				x_coordinate_offset := (column_widths[j] - len(col)) / 2
 				string_x_coordinate := x_coordinate_offset + col_x_coordinate
 				for cx in build_cell_with_xarray(col) {
 					k, cell := cx.x, cx.cell
 					buffer_set_cell(buf, cell, pt(string_x_coordinate+k, y_coordinate))
 				}
-			} else if t.text_alignment == Align_Right {
+			} else if t.text_alignment == ALIGN_RIGHT {
 				string_x_coordinate := min_int(col_x_coordinate+column_widths[j], t.inner.max.x) - len(col)
 				for cx in build_cell_with_xarray(col) {
 					k, cell := cx.x, cx.cell

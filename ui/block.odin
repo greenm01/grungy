@@ -1,5 +1,7 @@
 package ui
 
+import "core:fmt"
+
 // Block is the base struct inherited by most widgets.
 // Block manages size, position, border, and title.
 // It implements all 3 of the methods needed for the `Drawable` interface.
@@ -30,7 +32,7 @@ new_block :: proc() -> ^Block {
 	return b
 }
 
-draw_border :: proc(b: ^Block, buf: ^Buffer) {
+draw_border_block :: proc(b: ^Block, buf: ^Buffer) {
 	vertical_cell := Cell{VERTICAL_LINE, b.border_style}
 	horizontal_cell := Cell{HORIZONTAL_LINE, b.border_style}
 
@@ -96,7 +98,7 @@ draw_border :: proc(b: ^Block, buf: ^Buffer) {
 
 // Draw implements the Drawable interface.
 draw_block :: proc(b: ^Block, buf: ^Buffer) {
-	if b.border do draw_border(b, buf)
+	if b.border do draw_border_block(b, buf)
 	buffer_set_string(
 		buf,
 		b.title,
@@ -116,8 +118,4 @@ set_rect :: proc(b: ^Block, x1, y1, x2, y2: int) {
 	)
 }
 
-// GetRect implements the Drawable interface.
-get_rect :: proc(b: ^Block) -> Rectangle {
-	return b.rectangle
-}
-				
+		
