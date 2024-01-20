@@ -11,7 +11,7 @@ main :: proc() {
       fmt.println("failed to initialize grungy: %v", err)
       os.exit(1)
    }
-   //defer ui.close()
+   defer ui.close()
 
    ui.clear()
    
@@ -66,6 +66,4 @@ main :: proc() {
    		if event.type == ui.Event_Type.Keyboard_Event do break
    }
 
-   ui.close()
-   fmt.println(x, y)
 }
