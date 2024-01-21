@@ -6,7 +6,7 @@ import "../ui"
 
 main :: proc() {
 
-	if err := ui.init(); err != 0 {
+	if err := ui.init(); err != ui.OK {
 		fmt.printf("failed to initialize grungy: %v", err)
 		ui.close(); os.exit(1)
 	}

@@ -3,6 +3,7 @@ package ui
 import "core:os"
 import "core:strings"
 import "core:fmt"
+import "core:unicode/utf8"
 
 import tb "../termbox2"
 
@@ -41,6 +42,11 @@ Event :: struct {
 	type:    Event_Type,
 	id:      string,
 	payload: union {Keyboard, Mouse, Resize},
+}
+
+del_event :: proc(e: ^Event) {
+	free(&e.payload)
+	free(e)	
 }
 
 Keyboard :: struct {
@@ -166,21 +172,16 @@ keyboard_map := map[tb.Key]string {
 // convertTermboxKeyboardEvent converts a termbox keyboard event to a more friendly string format.
 // Combines modifiers into the string instead of having them as additional fields in an event.
 convert_termbox_keyboard_event :: proc(e: ^tb.Event) -> ^Event {
-	id := "%s"
+	id: string
 	if e.mod == tb.MOD_ALT {
 		id = "<M-%s>"
 	}
 
 	if e.ch != 0 {
-		sb := strings.builder_make()
-		strings.write_string(&sb, id)
-		strings.write_uint(&sb, uint(e.ch))
-		id = strings.to_string(sb)
+		id = utf8.runes_to_string([]rune{rune(e.ch)})
 	} else {
 		converted, ok := keyboard_map[e.key]
-		if !ok {
-			converted = ""
-		}
+		if !ok do converted = ""
 		s := []string{id, converted}
 		id = strings.concatenate(s)
 	}

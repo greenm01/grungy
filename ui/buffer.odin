@@ -24,9 +24,15 @@ Buffer :: struct {
 	cell_map:  map[Point]Cell,
 }
 
-new_buffer :: proc(r: Rectangle) -> Buffer {
-	buf := Buffer{r, make(map[Point]Cell)}
-	buffer_fill(&buf, CELL_CLEAR, r) // clears out area
+del_buffer :: proc(b: ^Buffer) {
+	delete(b.cell_map)
+}
+
+new_buffer :: proc(r: Rectangle) -> ^Buffer {
+	buf := new(Buffer)
+	buf.rectangle = r
+	buf.cell_map = make(map[Point]Cell)
+	buffer_fill(buf, CELL_CLEAR, r) // clears out area
 	return buf
 }
 

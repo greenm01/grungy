@@ -1,17 +1,18 @@
 package ui
 
-import "core:fmt"
-
 render :: proc(blocks: ..^Block) {
 	for block in blocks {
 		buf := new_buffer(block.rectangle)
+		defer del_buffer(buf)
 
 		// Add new widgets here
 		switch w in block.widget {
 		case ^Paragraph:
-			draw_paragraph(w, &buf)
+			draw_paragraph(w, buf)
 		case ^Table:
-			draw_table(w, &buf)
+			draw_table(w, buf)
+		case ^List:
+			draw_list(w, buf)
 		}
 				
 		for point, cell in buf.cell_map {

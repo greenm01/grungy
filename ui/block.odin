@@ -1,7 +1,5 @@
 package ui
 
-import "core:fmt"
-
 // Block is the base struct inherited by most widgets.
 // Block manages size, position, border, and title.
 // It implements all 3 of the methods needed for the `Drawable` interface.
@@ -30,6 +28,11 @@ new_block :: proc() -> ^Block {
 	b.border_bottom = true
 	b.title_style = theme.block.title
 	return b
+}
+
+del_widget :: proc(b: ^Block) {
+	free(&b.widget)
+	free(b)
 }
 
 draw_border_block :: proc(b: ^Block, buf: ^Buffer) {

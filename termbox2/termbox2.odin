@@ -179,13 +179,13 @@ ERR_CAP_COLLISION    :: -22
 
 Event :: struct {
 	type: Event_Type, /* one of EVENT_* constants */
-	mod:  Modifier, /* bitwise MOD_* constants */
-	key:  Key, /* one of KEY_* constants */
+	mod:  Modifier,   /* bitwise MOD_* constants */
+	key:  Key,        /* one of KEY_* constants */
 	ch:   c.uint32_t, /* a Unicode code point */
-	w:    c.int32_t, /* resize width */
-	h:    c.int32_t, /* resize height */
-	x:    c.int32_t, /* mouse x */
-	y:    c.int32_t, /* mouse y */
+	w:    c.int32_t,  /* resize width */
+	h:    c.int32_t,  /* resize height */
+	x:    c.int32_t,  /* mouse x */
+	y:    c.int32_t,  /* mouse y */
 }
 
 @(link_prefix = "tb_")

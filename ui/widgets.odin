@@ -6,10 +6,13 @@ package ui
  *     2) Add the widget's type to the render procedure
  * ###################################################### */
 
+import wc "wcwidth"
+
 // Available widgets. 
 Widgets :: union {
 	^Paragraph,
 	^Table,
+	^List,
 }
 
 /* ##########################
@@ -184,4 +187,143 @@ draw_table :: proc(t: ^Table, buf: ^Buffer) {
 			y_coordinate += 1
 		}
 	}
+}
+
+/* #####################
+ * #### LIST WIDGET ####
+ * ##################### */
+
+List :: struct {
+	using block:        ^Block,
+	rows:               []string,
+	wrap_text:          bool,
+	text_style:         Style,
+	selected_row:       int,
+	top_row:            int,
+	selected_row_style: Style,
+}
+
+new_list :: proc() -> (list: ^List) {
+	b := new_block()
+	list = new(List)
+	list.block = b
+	list.text_style = theme.list.text
+	list.selected_row_style = theme.list.text
+	b.widget = list
+	return
+}
+
+draw_list :: proc(l: ^List, buf: ^Buffer) {
+	draw_block(l, buf)
+
+	point := l.inner.min
+
+	// adjusts view into widget
+	if l.selected_row >= rect_dy(l.inner)+l.top_row {
+		l.top_row = l.selected_row - rect_dy(l.inner) + 1
+	} else if l.selected_row < l.top_row {
+		l.top_row = l.selected_row
+	}
+
+	// draw rows
+	for row := l.top_row; row < len(l.rows) && point.y < l.inner.max.y; row += 1 {
+		cells := parse_styles(l.rows[row], l.text_style)
+		if l.wrap_text {
+			cells = wrap_cells(cells, rect_dx(l.inner))
+		}
+		for j := 0; j < len(cells) && point.y < l.inner.max.y; j += 1 {
+			style := cells[j].style
+			if row == l.selected_row {
+				style = l.selected_row_style
+			}
+			if cells[j]._rune == '\n' {
+				point = pt(l.inner.min.x, point.y+1)
+			} else {
+				if point.x+1 == l.inner.max.x+1 && len(cells) > rect_dx(l.inner) {
+					buffer_set_cell(
+						buf,
+						new_cell(ELLIPSES, style),
+						pt_add(point, pt(-1, 0))
+					)
+					break
+				} else {
+					buffer_set_cell(
+						buf,
+						new_cell(cells[j]._rune, style),
+						point
+					)
+					point = pt_add(point, pt(wc.rune_width(cells[j]._rune), 0))
+				}
+			}
+		}
+		point = pt(l.inner.min.x, point.y+1)
+	}
+
+	// draw UP_ARROW if needed
+	if l.top_row > 0 {
+		buffer_set_cell(
+			buf,
+			new_cell(UP_ARROW, new_style(WHITE)),
+			pt(l.inner.max.x-1, l.inner.min.y),
+		)
+	}
+
+	// draw DOWN_ARROW if needed
+	if len(l.rows) > int(l.top_row)+rect_dy(l.inner) {
+		buffer_set_cell(
+			buf,
+			new_cell(DOWN_ARROW, new_style(WHITE)),
+			pt(l.inner.max.x-1, l.inner.max.y-1),
+		)
+	}
+}
+
+// ScrollAmount scrolls by amount given. If amount is < 0, then scroll up.
+// There is no need to set self.top_row, as this will be set automatically when drawn,
+// since if the selected item is off screen then the top_row variable will change accordingly.
+list_scroll_amount :: proc(l: ^List, amount: int) {
+	if len(l.rows)-int(l.selected_row) <= amount {
+		l.selected_row = len(l.rows) - 1
+	} else if int(l.selected_row)+amount < 0 {
+		l.selected_row = 0
+	} else {
+		l.selected_row += amount
+	}
+}
+
+list_scroll_up :: proc(l: ^List) {
+	list_scroll_amount(l, -1)
+}
+
+list_scroll_down :: proc(l: ^List) {
+	list_scroll_amount(l, 1)
+}
+
+list_scroll_page_up :: proc(l: ^List) {
+	// If an item is selected below top row, then go to the top row.
+	if l.selected_row > l.top_row {
+		l.selected_row = l.top_row
+	} else {
+		list_scroll_amount(l, -rect_dy(l.inner))
+	}
+}
+
+list_scroll_page_down :: proc(l: ^List) {
+	list_scroll_amount(l, rect_dy(l.inner))
+}
+
+list_scroll_half_page_up :: proc(l: ^List) {
+	list_scroll_amount(l, -int(floor_f64(f64(rect_dy(l.inner)) / 2)))
+}
+
+list_scroll_half_page_down :: proc(l: ^List) {
+	list_scroll_amount(l, int(floor_f64(f64(rect_dy(l.inner)) / 2)))
+}
+
+list_scroll_top :: proc(l: ^List) {
+	l.selected_row = 0
+}
+
+list_scroll_bottom :: proc(l: ^List) {
+	l.selected_row = len(l.rows) - 1
 }
