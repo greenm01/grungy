@@ -1,8 +1,10 @@
 package ui
 
-ALIGN_LEFT   :: 0
-ALIGN_CENTER :: 1
-ALIGN_RIGHT  :: 2
+Alignment :: enum {
+	Align_Left,
+	Align_Center,
+	Align_Right,
+}
 
 // Style represents the style of one terminal cell
 Style :: struct {

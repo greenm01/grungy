@@ -6,8 +6,8 @@ import "core:os"
 import "core:strings"
 import "core:unicode/utf8"
 
-import wc "wcwidth"
-import "wordwrap"
+import wc "../deps/wcwidth"
+import "../deps/wordwrap"
 
 // TrimString trims a string to a max length and adds '…' to the end if it was trimmed.
 trim_string :: proc(s: string, w: int) -> string {

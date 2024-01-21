@@ -2,7 +2,9 @@ package hello_world
 
 import "core:fmt"
 import "core:os"
+
 import "../ui"
+import wg "../widgets"
 
 main :: proc() {
 
@@ -14,17 +16,19 @@ main :: proc() {
 			
 	ui.clear()
 
-	p := ui.new_paragraph()
+	p := wg.new_paragraph()
 	p.text = "\nPress a key to quit..."
 	p.title = " Hello World! "
+	wg.set_rect(p, 0, 0, 25, 5)
+	wg.render(p)
 	
-	ui.set_rect(p, 0, 0, 25, 5)
-	ui.render(p)
 	ui.present()
-	
+
+	using ui.Event_Type
+
 	for {
 		event := ui.poll_event()
-		if event.type == ui.Event_Type.Keyboard_Event do break
+		if event.type == Keyboard_Event do break
 	}
 	
 }

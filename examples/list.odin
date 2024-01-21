@@ -5,6 +5,7 @@ import "core:os"
 import "core:strings"
 
 import "../ui"
+import wg "../widgets"
 
 main :: proc () {
 	if err := ui.init(); err != ui.OK {
@@ -13,8 +14,8 @@ main :: proc () {
 	}
 	defer ui.close()
 
-	l := ui.new_list()
-	defer ui.del_widget(l)
+	l := wg.new_list()
+	defer wg.del_widget(l)
 
 	l.title = "List"
 	l.rows = []string{
@@ -31,10 +32,10 @@ main :: proc () {
 	}
 	l.text_style = ui.new_style(ui.YELLOW)
 	l.wrap_text = false
-	ui.set_rect(l, 0, 0, 25, 8)
+	wg.set_rect(l, 0, 0, 25, 8)
 
 	ui.clear()
-	ui.render(l)
+	wg.render(l)
 	ui.present()
 
 	using ui.Event_Type
@@ -48,23 +49,23 @@ main :: proc () {
 			case "q", "<C-c>", "<Escape>":
 				break loop
 			case "j", "<Down>":
-				ui.list_scroll_down(l)
+				wg.list_scroll_down(l)
 			case "k", "<Up>":
-				ui.list_scroll_up(l)
+				wg.list_scroll_up(l)
 			case "<C-d>":
-				ui.list_scroll_half_page_down(l)
+				wg.list_scroll_half_page_down(l)
 			case "<C-u>":
-				ui.list_scroll_half_page_up(l)
+				wg.list_scroll_half_page_up(l)
 			case "<C-f>":
-				ui.list_scroll_page_down(l)
+				wg.list_scroll_page_down(l)
 			case "<C-b>":
-				ui.list_scroll_page_up(l)
+				wg.list_scroll_page_up(l)
 			case "g":
-				if previous_key == "g" do ui.list_scroll_top(l)
+				if previous_key == "g" do wg.list_scroll_top(l)
 			case "<Home>":
-				ui.list_scroll_top(l)
+				wg.list_scroll_top(l)
 			case "G", "<End>":
-				ui.list_scroll_bottom(l)
+				wg.list_scroll_bottom(l)
 			}			
 		case Mouse_Event:
 			break loop
@@ -79,7 +80,7 @@ main :: proc () {
 		}
 
 		ui.clear()
-		ui.render(l)
+		wg.render(l)
 		ui.present()
 	}
 }

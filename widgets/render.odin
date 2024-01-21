@@ -1,9 +1,11 @@
-package ui
+package widgets
+
+import "../ui"
 
 render :: proc(blocks: ..^Block) {
 	for block in blocks {
-		buf := new_buffer(block.rectangle)
-		defer del_buffer(buf)
+		buf := ui.new_buffer(block.rectangle)
+		defer ui.del_buffer(buf)
 
 		// Add new widgets here
 		switch w in block.widget {
@@ -16,8 +18,8 @@ render :: proc(blocks: ..^Block) {
 		}
 				
 		for point, cell in buf.cell_map {
-			if pt_in(point, buf.rectangle) {
-				set_cell(
+			if ui.pt_in(point, buf.rectangle) {
+				ui.set_cell(
 					point.x,
 					point.y,
 					cell._rune,

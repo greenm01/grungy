@@ -1,7 +1,8 @@
 package ui
 
 import "core:unicode/utf8"
-import wc "wcwidth"
+
+import wc "../deps/wcwidth"
 
 // Cell represents a viewable terminal cell
 Cell :: struct {
@@ -26,6 +27,7 @@ Buffer :: struct {
 
 del_buffer :: proc(b: ^Buffer) {
 	delete(b.cell_map)
+	free(b)
 }
 
 new_buffer :: proc(r: Rectangle) -> ^Buffer {
