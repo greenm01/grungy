@@ -9,3 +9,7 @@ wcwidth and wordwrap added as git submodules
       ```
       git submodule update --remote --merge
       ```
+
+TODO:
+
+    1) make termbox2 a standalone lib once mature
