@@ -38,6 +38,11 @@ new_table :: proc() -> (table: ^Table) {
 	return 
 }
 
+del_table :: proc(t: ^Table) {
+	delete(t.row_styles)
+	del_block(t)
+}
+
 draw_table :: proc(t: ^Table, buf: ^ui.Buffer) {
 	draw_block(t.block, buf)
 

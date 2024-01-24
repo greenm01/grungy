@@ -23,6 +23,10 @@ new_list :: proc() -> (list: ^List) {
 	return
 }
 
+del_list :: proc(l: ^List) {
+	del_block(l)	
+}
+
 draw_list :: proc(l: ^List, buf: ^ui.Buffer) {
 	draw_block(l, buf)
 

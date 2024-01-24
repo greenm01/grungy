@@ -5,7 +5,7 @@ import "../ui"
 /* ##############################################################
  * To add a new widget, remember to do two things:
  *     1) Add the widget struct to the Widgets union.
- *     2) Add the widget's type to the render_widget procedure
+ *     2) Add the widget's type to the render procedure
  * ############################################################## */
 
 // Available widgets. 
@@ -13,6 +13,7 @@ Widgets :: union {
 	^Paragraph,
 	^Table,
 	^List,
+	^Tree,
 }
 
 // Block is the base struct inherited by all widgets.
@@ -42,7 +43,7 @@ new_block :: proc() -> ^Block {
 	return b
 }
 
-del_widget :: proc(b: ^Block) {
+del_block :: proc(b: ^Block) {
 	free(&b.widget)
 	free(b)
 }

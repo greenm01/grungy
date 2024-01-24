@@ -19,7 +19,7 @@ main :: proc() {
    x,y := ui.terminal_dimensions()
 
    table1 := wg.new_table()
-   defer wg.del_widget(table1)
+   defer wg.del_table(table1)
    
    table1.rows = [][]string{
    	[]string{"header1", "header2", "header3"},
@@ -31,7 +31,7 @@ main :: proc() {
    wg.render(table1)
    
    table2 := wg.new_table()
-   defer wg.del_widget(table2)
+   defer wg.del_table(table2)
 
    table2.rows = [][]string{
    	[]string{"header1", "header2", "header3"},
@@ -45,7 +45,7 @@ main :: proc() {
    wg.render(table2)
    
    table3 := wg.new_table()
-   defer wg.del_widget(table3)
+   defer wg.del_table(table3)
 
    table3.rows = [][]string{
    	[]string{"header1", "header2", "header3"},

@@ -15,6 +15,8 @@ render :: proc(blocks: ..^Block) {
 			draw_table(w, buf)
 		case ^List:
 			draw_list(w, buf)
+		case ^Tree:
+			draw_tree(w, buf)
 		}
 				
 		for point, cell in buf.cell_map {

@@ -15,7 +15,7 @@ main :: proc () {
 	defer ui.close()
 
 	l := wg.new_list()
-	defer wg.del_widget(l)
+	defer wg.del_list(l)
 
 	l.title = "List"
 	l.rows = []string{
