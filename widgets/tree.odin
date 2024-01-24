@@ -21,7 +21,7 @@ Tree_Node :: struct {
 // To interrupt the walking process function should return false.
 tree_walk :: proc(n: ^Tree_Node) -> bool
 
-parse_styles :: proc(tn: Tree_Node, style: ui.Style) -> []ui.Cell {
+parse_styles :: proc(tn: ^Tree_Node, style: ui.Style) -> []ui.Cell {
 	sb: str.Builder
 	if len(tn.nodes) == 0 {
 		str.write_string(&sb, str.repeat(TREE_INDENT, tn.level+1))
@@ -47,7 +47,7 @@ Tree :: struct {
 	selected_row:       int,
 	nodes:              []Tree_Node,
 	// rows is flatten nodes for rendering.
-	rows:               [dynamic]Tree_Node,
+	rows:               [dynamic]^Tree_Node,
 	top_row:            int,
 }
 
@@ -83,14 +83,14 @@ set_nodes :: proc(t: ^Tree, nodes: []Tree_Node) {
 }
 
 prepare_nodes :: proc(t: ^Tree) {
-	t.rows = make([dynamic]Tree_Node)
+	t.rows = make([dynamic]^Tree_Node)
 	for _, i in t.nodes {
 		prepare_node(t, &t.nodes[i], 0)
 	}
 }
 
 prepare_node :: proc(t: ^Tree, node: ^Tree_Node, level: int) {
-	append(&t.rows, node^)
+	append(&t.rows, node)
 	node.level = level
 	
 	if node.expanded {
@@ -199,9 +199,9 @@ scroll_amount :: proc(t: ^Tree, amount: int) {
 	}
 }
 
-selected_node :: proc(t: ^Tree) -> Tree_Node {
+selected_node :: proc(t: ^Tree) -> ^Tree_Node {
 	if len(t.rows) == 0 {
-		return Tree_Node{}
+		return new(Tree_Node)
 	}
 	return t.rows[t.selected_row]
 }
@@ -257,7 +257,7 @@ expand :: proc(t: ^Tree) {
 }
 
 toggle_expand :: proc(t: ^Tree) {
-	node := &t.rows[t.selected_row]
+	node := t.rows[t.selected_row] 
 	if len(node.nodes) > 0 {
 		node.expanded = !node.expanded
 	}
