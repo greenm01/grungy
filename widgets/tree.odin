@@ -64,16 +64,7 @@ new_tree :: proc() -> (tree: ^Tree) {
 }
 
 del_tree :: proc(t: ^Tree) {
-	/*
-	for n in t.nodes {
-		del_tree_node(n)
-	}
-	for r in t.rows {
-		del_tree_node(r)
-	}
-	delete(t.nodes)
 	delete(t.rows)
-	*/
 	del_block(t)	 
 }
 
