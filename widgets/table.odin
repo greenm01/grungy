@@ -30,7 +30,7 @@ new_table :: proc() -> (table: ^Table) {
 	b := new_block()
 	table = new(Table)
 	table.block = b
-	table.text_style = ui.theme.table.text
+	table.text_style = theme.table.text
 	table.row_separator = true
 	table.row_styles = make(map[int]ui.Style)
 	table.column_resizer = proc() -> bool {return false}  

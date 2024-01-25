@@ -28,9 +28,9 @@ parse_styles :: proc(tn: ^Tree_Node, style: ui.Style) -> []ui.Cell {
 	} else {
 		str.write_string(&sb, str.repeat(TREE_INDENT, tn.level))
 		if tn.expanded {
-			str.write_rune(&sb, ui.theme.tree.expanded)
+			str.write_rune(&sb, theme.tree.expanded)
 		} else {
-			str.write_rune(&sb, ui.theme.tree.collapsed)
+			str.write_rune(&sb, theme.tree.collapsed)
 		}
 		str.write_byte(&sb, ' ')
 	}
@@ -56,8 +56,8 @@ new_tree :: proc() -> (tree: ^Tree) {
 	b := new(Block)
 	tree = new(Tree)
 	tree.block = b 
-	tree.text_style = ui.theme.tree.text
-	tree.selected_row_style = ui.theme.tree.text
+	tree.text_style = theme.tree.text
+	tree.selected_row_style = theme.tree.text
 	tree.wrap_text = true
 	b.widget = tree
 	return

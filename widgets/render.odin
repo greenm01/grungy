@@ -17,6 +17,8 @@ render :: proc(blocks: ..^Block) {
 			draw_list(w, buf)
 		case ^Tree:
 			draw_tree(w, buf)
+		case ^Bar_Chart:
+			draw_bar_chart(w, buf)
 		}
 				
 		for point, cell in buf.cell_map {

@@ -6,6 +6,7 @@ import "../ui"
  * To add a new widget, remember to do two things:
  *     1) Add the widget struct to the Widgets union.
  *     2) Add the widget's type to the render procedure
+ *     3) Create a new theme
  * ############################################################## */
 
 // Available widgets. 
@@ -14,6 +15,7 @@ Widgets :: union {
 	^Table,
 	^List,
 	^Tree,
+	^Bar_Chart,
 }
 
 // Block is the base struct inherited by all widgets.
@@ -34,12 +36,12 @@ Block :: struct {
 new_block :: proc() -> ^Block {
 	b := new(Block)
 	b.border = true
-	b.border_style = ui.theme.block.border
+	b.border_style = theme.block.border
 	b.border_left = true
 	b.border_right = true
 	b.border_top = true
 	b.border_bottom = true
-	b.title_style = ui.theme.block.title
+	b.title_style = theme.block.title
 	return b
 }
 

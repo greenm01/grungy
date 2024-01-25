@@ -17,8 +17,8 @@ new_list :: proc() -> (list: ^List) {
 	b := new_block()
 	list = new(List)
 	list.block = b
-	list.text_style = ui.theme.list.text
-	list.selected_row_style = ui.theme.list.text
+	list.text_style = theme.list.text
+	list.selected_row_style = theme.list.text
 	b.widget = list
 	return
 }
