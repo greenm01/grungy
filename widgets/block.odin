@@ -3,7 +3,7 @@ package widgets
 import "../ui"
 
 /* ##############################################################
- * To add a new widget, remember to do two things:
+ * To add a new widget, remember to do some things:
  *     1) Add the widget struct to the Widgets union.
  *     2) Add the widget's type to the render procedure
  *     3) Create a new theme
