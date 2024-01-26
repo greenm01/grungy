@@ -19,6 +19,8 @@ render :: proc(blocks: ..^Block) {
 			draw_tree(w, buf)
 		case ^Bar_Chart:
 			draw_bar_chart(w, buf)
+		case ^Pie_Chart:
+			draw_pie_chart(w, buf)
 		}
 				
 		for point, cell in buf.cell_map {

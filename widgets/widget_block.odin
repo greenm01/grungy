@@ -16,6 +16,7 @@ Widgets :: union {
 	^List,
 	^Tree,
 	^Bar_Chart,
+	^Pie_Chart,
 }
 
 // Block is the base struct inherited by all widgets.

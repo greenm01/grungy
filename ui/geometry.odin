@@ -21,6 +21,11 @@ pt_add :: proc(p, q: Point) -> Point {
 	return Point{p.x + q.x, p.y + q.y}
 }
 
+// Div returns the vector p/k.
+pt_div :: proc(p: Point, k: int) -> Point {
+	return Point{p.x / k, p.y / k}
+}
+
 Rectangle :: struct {
 	min, max: Point,
 }
@@ -37,4 +42,11 @@ rect_dx :: proc(r: Rectangle) -> int {
 
 rect_dy :: proc(r: Rectangle) -> int {
 	return r.max.y - r.min.y
+}
+
+rect_size :: proc(r: Rectangle) -> Point {
+	return Point{
+		r.max.x - r.min.x,
+		r.max.y - r.min.y,
+	}
 }
