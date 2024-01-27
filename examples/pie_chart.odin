@@ -5,6 +5,7 @@ import "core:os"
 import "core:math"
 import "core:math/rand"
 import "core:time"
+import "core:thread"
 
 import "../ui"
 import wg "../widgets"
@@ -60,30 +61,42 @@ main :: proc() {
 	wg.render(pc)
 	ui.present()
 
-	using ui.Event_Type
-
 	start := time.now()
 	ticker := false
 
+	// Let's use a thread so termbox2's event
+	// polling won't block the clock
+	event := new(ui.Event)
+	event_thread :: ui.poll_kb_event_thread
+	worker := thread.create_and_start_with_data(event, event_thread)
+	defer clean_thread(event, worker)
+
+	using ui.Event_Type
 	loop: for {
+		// Give the CPU a rest
+		time.sleep(time.Duration(100))
 		d := time.duration_seconds(time.diff(start, time.now()))
 		if d >= 1 {
 			start = time.now()
 			ticker = true
 		}
-		// need to create a thread to prevent blocking the clock
-		e := ui.poll_event()
-		if e.type == .Keyboard_Event {
-			switch e.id {
-			case "q", "<C-c>", "<Escape>":
-				break loop
-			case "s":
-				pause(pc)
-			case "t":
-				ticker = true
-				if !run do pause(pc)
+		if thread.is_done(worker) {
+			if event.type == .Keyboard_Event {
+				switch event.id {
+				case "q", "<C-c>", "<Escape>":
+					break loop
+				case "s":
+					pause(pc)
+				case "t":
+					ticker = true
+					if !run do pause(pc)
+				}
 			}
+			clean_thread(event, worker)
+			event = new(ui.Event)
+			worker = thread.create_and_start_with_data(event, event_thread)
 		}
+
 		if ticker {
 			ticker = false
 			if run {
@@ -94,4 +107,9 @@ main :: proc() {
 			}
 		}
 	}
+}
+
+clean_thread :: proc(event: ^ui.Event, worker: ^thread.Thread) {
+	free(event)
+	thread.destroy(worker)
 }

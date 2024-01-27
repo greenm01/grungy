@@ -110,6 +110,34 @@ poll_event :: proc() -> ^Event {
 	return new(Event)
 }
 
+poll_kb_event_thread :: proc(e: rawptr) {
+	tb_event := new(tb.Event)
+	if tb.poll_event(tb_event) == tb.OK {
+		convert_kb_event_thread(cast(^Event)e, tb_event)
+	}
+}
+
+convert_kb_event_thread :: proc(event: ^Event, e: ^tb.Event) {
+	id: string
+	if e.mod == tb.MOD_ALT {
+		id = "<M-%s>"
+	}
+
+	if e.ch != 0 {
+		id = utf8.runes_to_string([]rune{rune(e.ch)})
+	} else {
+		converted, ok := keyboard_map[e.key]
+		if !ok do converted = ""
+		s := []string{id, converted}
+		id = strings.concatenate(s)
+	}
+	
+	event.type = .Keyboard_Event
+	event.id = id
+	event.payload = Keyboard{event = event}
+
+}
+	
 keyboard_map := map[tb.Key]string {
 	tb.KEY_F1          = "<F1>",
 	tb.KEY_F2          = "<F2>",
@@ -188,6 +216,8 @@ convert_termbox_keyboard_event :: proc(e: ^tb.Event) -> ^Event {
 	return new_keyboard_event(id)
 }
 
+
+	
 mouse_button_map := map[tb.Key]string {
 	tb.MOUSE_LEFT       = "<MouseLeft>",
 	tb.MOUSE_MIDDLE     = "<MouseMiddle>",
