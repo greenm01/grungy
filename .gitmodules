@@ -4,3 +4,6 @@
 [submodule "ui/wordwrap"]
 	path = deps/wordwrap
 	url = https://github.com/greenm01/wordwrap.git
+[submodule "deps/karvi"]
+	path = deps/karvi
+	url = https://github.com/greenm01/karvi
