@@ -1,11 +1,12 @@
 package buffer
 
-import "../deps/karvi"
+import "../backend"
 
-Color :: karvi.Color
+Color :: backend.Color
+Modifier :: backend.Modifier
 
 Cell :: struct {
-	symbol:   rune
+	symbol:   rune,
 	fg:       Color,
 	bg,       Color,
 	modifier: Modifier,
