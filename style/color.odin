@@ -1,15 +1,13 @@
 package style
 
-Color :: distinct int
-
-COLOR_DEFAULT : Color : 0
-COLOR_VALID:    Color : 1 << 32
-COLOR_IS_RGB:   Color : 1 << 33
-COLOR_SPECIAL:  Color : 1 << 34
+COLOR_DEFAULT:  int : 0
+COLOR_VALID:    int : 1 << 32
+COLOR_IS_RGB:   int : 1 << 33
+COLOR_SPECIAL:  int : 1 << 34
 
 // Order is important, as it conforms to ECMA and XTerm. Any additional
 // color names should be < 256
-Color_List :: enum Color {
+Color :: enum {
     Color_Black = COLOR_VALID,
 	Color_Maroon,
 	Color_Green,
@@ -393,16 +391,16 @@ Color_List :: enum Color {
 
 // These are aliases for the color gray, because some of us spell
 // it as grey.
-Color_Grey:             Color_List: .Color_Gray
-Color_Dim_Grey:         Color_List: .Color_Dim_Gray
-Color_Dark_Grey:        Color_List: .Color_Dark_Gray
-Color_Dark_Slate_Grey:  Color_List: .Color_Dark_Slate_Gray
-Color_Light_Grey:       Color_List: .Color_Light_Gray
-Color_Light_Slate_Grey: Color_List: .Color_Light_Slate_Gray
-Color_Slate_Grey:       Color_List: .Color_Slate_Gray
+Color_Grey:             Color: .Color_Gray
+Color_Dim_Grey:         Color: .Color_Dim_Gray
+Color_Dark_Grey:        Color: .Color_Dark_Gray
+Color_Dark_Slate_Grey:  Color: .Color_Dark_Slate_Gray
+Color_Light_Grey:       Color: .Color_Light_Gray
+Color_Light_Slate_Grey: Color: .Color_Light_Slate_Gray
+Color_Slate_Grey:       Color: .Color_Slate_Gray
 
 // ColorValues maps color constants to their RGB values.
-Color_Values := map[Color_List]int{
+Color_Values := map[Color]int{
 	.Color_Black =                  0x000000,
 	.Color_Maroon =                 0x800000,
 	.Color_Green =                  0x008000,
@@ -782,4 +780,154 @@ Color_Values := map[Color_List]int{
 	.Color_Wheat =                  0xF5DEB3,
 	.Color_White_Smoke =            0xF5F5F5,
 	.Color_Yellow_Green =           0x9ACD32,
+}
+// ColorNames holds the written names of colors. Useful to present a list of
+// recognized named colors.
+Color_Names := map[string]Color {
+	"black" =                .Color_Black,
+	"maroon" =               .Color_Maroon,
+	"green" =                .Color_Green,
+	"olive" =                .Color_Olive,
+	"navy" =                 .Color_Navy,
+	"purple" =               .Color_Purple,
+	"teal" =                 .Color_Teal,
+	"silver" =               .Color_Silver,
+	"gray" =                 .Color_Gray,
+	"red" =                  .Color_Red,
+	"lime" =                 .Color_Lime,
+	"yellow" =               .Color_Yellow,
+	"blue" =                 .Color_Blue,
+	"fuchsia" =              .Color_Fuchsia,
+	"aqua" =                 .Color_Aqua,
+	"white" =                .Color_White,
+	"aliceblue" =            .Color_Alice_Blue,
+	"antiquewhite" =         .Color_Antique_White,
+	"aquamarine" =           .Color_Aqua_Marine,
+	"azure" =                .Color_Azure,
+	"beige" =                .Color_Beige,
+	"bisque" =               .Color_Bisque,
+	"blanchedalmond" =       .Color_Blanched_Almond,
+	"blueviolet" =           .Color_Blue_Violet,
+	"brown" =                .Color_Brown,
+	"burlywood" =            .Color_Burly_Wood,
+	"cadetblue" =            .Color_Cadet_Blue,
+	"chartreuse" =           .Color_Chartreuse,
+	"chocolate" =            .Color_Chocolate,
+	"coral" =                .Color_Coral,
+	"cornflowerblue" =       .Color_Cornflower_Blue,
+	"cornsilk" =             .Color_Cornsilk,
+	"crimson" =              .Color_Crimson,
+	"darkblue" =             .Color_Dark_Blue,
+	"darkcyan" =             .Color_Dark_Cyan,
+	"darkgoldenrod" =        .Color_Dark_Goldenrod,
+	"darkgray" =             .Color_Dark_Gray,
+	"darkgreen" =            .Color_Dark_Green,
+	"darkkhaki" =            .Color_Dark_Khaki,
+	"darkmagenta" =          .Color_Dark_Magenta,
+	"darkolivegreen" =       .Color_Dark_Olive_Green,
+	"darkorange" =           .Color_Dark_Orange,
+	"darkorchid" =           .Color_Dark_Orchid,
+	"darkred" =              .Color_Dark_Red,
+	"darksalmon" =           .Color_Dark_Salmon,
+	"darkseagreen" =         .Color_Dark_Sea_Green,
+	"darkslateblue" =        .Color_Dark_Slate_Blue,
+	"darkslategray" =        .Color_Dark_Slate_Gray,
+	"darkturquoise" =        .Color_Dark_Turquoise,
+	"darkviolet" =           .Color_Dark_Violet,
+	"deeppink" =             .Color_Deep_Pink,
+	"deepskyblue" =          .Color_Deep_Sky_Blue,
+	"dimgray" =              .Color_Dim_Gray,
+	"dodgerblue" =           .Color_Dodger_Blue,
+	"firebrick" =            .Color_Fire_Brick,
+	"floralwhite" =          .Color_Floral_White,
+	"forestgreen" =          .Color_Forest_Green,
+	"gainsboro" =            .Color_Gainsboro,
+	"ghostwhite" =           .Color_Ghost_White,
+	"gold" =                 .Color_Gold,
+	"goldenrod" =            .Color_Goldenrod,
+	"greenyellow" =          .Color_Green_Yellow,
+	"honeydew" =             .Color_Honeydew,
+	"hotpink" =              .Color_Hot_Pink,
+	"indianred" =            .Color_Indian_Red,
+	"indigo" =               .Color_Indigo,
+	"ivory" =                .Color_Ivory,
+	"khaki" =                .Color_Khaki,
+	"lavender" =             .Color_Lavender,
+	"lavenderblush" =        .Color_Lavender_Blush,
+	"lawngreen" =            .Color_Lawn_Green,
+	"lemonchiffon" =         .Color_Lemon_Chiffon,
+	"lightblue" =            .Color_Light_Blue,
+	"lightcoral" =           .Color_Light_Coral,
+	"lightcyan" =            .Color_Light_Cyan,
+	"lightgoldenrodyellow" = .Color_Light_Goldenrod_Yellow,
+	"lightgray" =            .Color_Light_Gray,
+	"lightgreen" =           .Color_Light_Green,
+	"lightpink" =            .Color_Light_Pink,
+	"lightsalmon" =          .Color_Light_Salmon,
+	"lightseagreen" =        .Color_Light_Sea_Green,
+	"lightskyblue" =         .Color_Light_Sky_Blue,
+	"lightslategray" =       .Color_Light_Slate_Gray,
+	"lightsteelblue" =       .Color_Light_Steel_Blue,
+	"lightyellow" =          .Color_Light_Yellow,
+	"limegreen" =            .Color_Lime_Green,
+	"linen" =                .Color_Linen,
+	"mediumaquamarine" =     .Color_Medium_Aquamarine,
+	"mediumblue" =           .Color_Medium_Blue,
+	"mediumorchid" =         .Color_Medium_Orchid,
+	"mediumpurple" =         .Color_Medium_Purple,
+	"mediumseagreen" =       .Color_Medium_Sea_Green,
+	"mediumslateblue" =      .Color_Medium_Slate_Blue,
+	"mediumspringgreen" =    .Color_Medium_Spring_Green,
+	"mediumturquoise" =      .Color_Medium_Turquoise,
+	"mediumvioletred" =      .Color_Medium_Violet_Red,
+	"midnightblue" =         .Color_Midnight_Blue,
+	"mintcream" =            .Color_Mint_Cream,
+	"mistyrose" =            .Color_Misty_Rose,
+	"moccasin" =             .Color_Moccasin,
+	"navajowhite" =          .Color_Navajo_White,
+	"oldlace" =              .Color_Old_Lace,
+	"olivedrab" =            .Color_Olive_Drab,
+	"orange" =               .Color_Orange,
+	"orangered" =            .Color_Orange_Red,
+	"orchid" =               .Color_Orchid,
+	"palegoldenrod" =        .Color_Pale_Goldenrod,
+	"palegreen" =            .Color_Pale_Green,
+	"paleturquoise" =        .Color_Pale_Turquoise,
+	"palevioletred" =        .Color_Pale_Violet_Red,
+	"papayawhip" =           .Color_Papaya_Whip,
+	"peachpuff" =            .Color_Peach_Puff,
+	"peru" =                 .Color_Peru,
+	"pink" =                 .Color_Pink,
+	"plum" =                 .Color_Plum,
+	"powderblue" =           .Color_Powder_Blue,
+	"rebeccapurple" =        .Color_Rebecca_Purple,
+	"rosybrown" =            .Color_Rosy_Brown,
+	"royalblue" =            .Color_Royal_Blue,
+	"saddlebrown" =          .Color_Saddle_Brown,
+	"salmon" =               .Color_Salmon,
+	"sandybrown" =           .Color_Sandy_Brown,
+	"seagreen" =             .Color_Sea_Green,
+	"seashell" =             .Color_Seashell,
+	"sienna" =               .Color_Sienna,
+	"skyblue" =              .Color_Skyblue,
+	"slateblue" =            .Color_Slate_Blue,
+	"slategray" =            .Color_Slate_Gray,
+	"snow" =                 .Color_Snow,
+	"springgreen" =          .Color_Spring_Green,
+	"steelblue" =            .Color_Steel_Blue,
+	"tan" =                  .Color_Tan,
+	"thistle" =              .Color_Thistle,
+	"tomato" =               .Color_Tomato,
+	"turquoise" =            .Color_Turquoise,
+	"violet" =               .Color_Violet,
+	"wheat" =                .Color_Wheat,
+	"whitesmoke" =           .Color_White_Smoke,
+	"yellowgreen" =          .Color_Yellow_Green,
+	"grey" =                 .Color_Gray,
+	"dimgrey" =              .Color_Dim_Gray,
+	"darkgrey" =             .Color_Dark_Gray,
+	"darkslategrey" =        .Color_Dark_Slate_Gray,
+	"lightgrey" =            .Color_Light_Gray,
+	"lightslategrey" =       .Color_Light_Slate_Gray,
+	"slategrey" =            .Color_Slate_Gray,
 }

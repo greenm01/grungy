@@ -13,5 +13,7 @@ main :: proc() {
    ofst := layout.Offset{5, 6}
    r2 := layout.offset(rect, ofst)
    fmt.println(rect, r2)
-   fmt.println(style.Color_List.Color_Maroon)
+
+   using style.Color
+   fmt.println(int(Color_Red), int(Color_Black))
 }
