@@ -147,10 +147,10 @@ contains :: proc(r: Rect, position: Position) -> bool {
 /// If the right or bottom coordinate of this rect is larger than the other rect, it will be
 /// clamped to the other rect's right or bottom coordinate.
 clamp :: proc(r, other: Rect) -> Rect {
-   width := r.width.min(other.width);
-   height := r.height.min(other.height);
-   x := r.x.clamp(other.x, other.right().saturating_sub(width));
-   y := r.y.clamp(other.y, other.bottom().saturating_sub(height));
+   width := r.width < other.width ? r.width : other.width
+   height := r.height < other.height ? r.height: other.height
+   x := math.clamp(r.x, other.x, right(other) - width)
+   y := math.clamp(r.y, other.y, bottom(other) - height)
    return Rect{x, y, width, height}
 }
 
