@@ -8,6 +8,7 @@ COLOR_SPECIAL:  int : 1 << 34
 // Order is important, as it conforms to ECMA and XTerm. Any additional
 // color names should be < 256
 Color :: enum {
+	Color_Default = COLOR_DEFAULT,
     Color_Black = COLOR_VALID,
 	Color_Maroon,
 	Color_Green,
@@ -784,6 +785,7 @@ Color_Values := map[Color]int{
 // ColorNames holds the written names of colors. Useful to present a list of
 // recognized named colors.
 Color_Names := map[string]Color {
+	"default" =              .Color_Default,
 	"black" =                .Color_Black,
 	"maroon" =               .Color_Maroon,
 	"green" =                .Color_Green,

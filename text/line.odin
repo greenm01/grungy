@@ -1,11 +1,14 @@
 package text
 
-import "../layout"
-
-Alignment :: layout.Alignment
-
 Line :: struct {
-   spans: []Span,
-   style: Style,
+   spans:     []Span,
+   style:     Style,
    alignment: Alignment,
+}
+
+line_width :: proc(l: Line) -> (width: int) {
+   for s in l.spans {
+      width += span_width(s)
+   }
+   return
 }
