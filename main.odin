@@ -7,6 +7,7 @@ import "buffer"
 import "text"
 import "layout"
 import "style"
+import "widgets"
 
 main :: proc() {
    rect := layout.Rect{1, 2, 3, 4}
