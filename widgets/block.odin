@@ -1,4 +1,4 @@
-package widget
+package widgets
 
 // Elements related to the `Block` base widget.
 //
@@ -7,25 +7,17 @@ package widget
 // In its simplest form, a `Block` is a [border](Borders) around another widget. It can have a
 
 Block :: struct  {
-    /// List of titles
     titles:           []Title,
-    /// The style to be patched to all titles of the block
     titles_style:     Style,
-    /// The default alignment of the titles that don't have one
     titles_alignment: Alignment,
-    /// The default position of the titles that don't have one
     titles_position:  Position,
-    /// Visible borders
     borders:          Borders,
-    /// Border style
     border_style:     Style,
-    /// The symbols used to render the border. The default is plain lines but one can choose to
-    /// have rounded or doubled lines instead or a custom set of symbols
     border_set:       Border_Set,
-    /// Widget style
     style:            Style,
-    /// Block padding
     padding:          Padding,
+
+    widget:           Widget_List,
 }
 
 BorderType :: enum {

@@ -1,16 +1,18 @@
-package widget
+package widgets
 
-import "block"
+import blk "block"
 
-import "../style"
-import "../layout"
+import sty "../style"
+import lyt "../layout"
+import txt "../text"
 
-Title    :: block.Title
-Position :: block.Position
-Padding  :: block.Padding
+Title    :: blk.Title
+Position :: blk.Position
+Padding  :: blk.Padding
 
-Style      :: style.Style
-Border_Set :: style.Border_Set
+Style      :: sty.Style
+Border_Set :: sty.Border_Set
 
-Alignment  :: layout.Alignment
+Alignment  :: lyt.Alignment
 
+Text :: txt.Text
