@@ -22,6 +22,16 @@ Style :: struct {
    modifier: Modifier,
 }
 
+// Default style has no color or modifier
+new_style :: proc(fg := Color.Color_Default, bg := Color.Color_Default,
+	mod := Modifier.None) -> (style: ^Style) {
+	style = new(Style)
+	style.fg = fg
+	style.bg = bg
+	style.modifier = mod
+	return
+}
+
 /// Results in a combined style that is equivalent to applying the two individual styles to
 /// a style one after the other
 patch :: proc(s, other: Style) -> Style {

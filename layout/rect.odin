@@ -125,14 +125,14 @@ intersects :: proc(r, other: Rect) -> bool {
    return r.x < right(other) && right(r) > other.x && r.y < bottom(other) && bottom(r) > other.y
 }
 
-/// Returns true if the given position is inside the rect.
+/// Returns true if the given point is inside the rect.
 ///
 /// The position is considered inside the rect if it is on the rect's border.
-contains :: proc(r: Rect, position: Position) -> bool {
-   return position.x >= r.x &&
-      position.x < right(r) &&
-      position.y >= r.y &&
-      position.y < bottom(r)
+contains :: proc(r: Rect, pt: Point) -> bool {
+   return pt.x >= r.x &&
+      pt.x < right(r) &&
+      pt.y >= r.y &&
+      pt.y < bottom(r)
 
 }
 
@@ -154,9 +154,9 @@ clamp :: proc(r, other: Rect) -> Rect {
    return Rect{x, y, width, height}
 }
 
-/// Returns a [`Position`] with the same coordinates as this rect.
-as_position :: proc(r: Rect) -> Position {
-   return Position {
+/// Returns a Point with the same coordinates as this rect.
+as_pt :: proc(r: Rect) -> Point {
+   return Point {
       x = r.x,
       y = r.y,
    }

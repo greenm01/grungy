@@ -9,11 +9,12 @@ Paragraph :: struct {
     alignment:   Alignment,
 }
 
-new_paragraph :: proc() -> (block: ^Block) {
+new_paragraph :: proc(text: Text) -> (block: ^Block) {
     block = new(Block)
     block.widget = Paragraph{
         block = block,
         alignment = Alignment.Left,
+        text = text,
     }
     return    
 }
@@ -24,3 +25,7 @@ Wrap :: struct {
 
 Horizontal :: distinct int
 Vertical :: distinct int
+
+render_paragraph :: proc(p: ^Paragraph, buf: ^Buffer) {
+        
+}

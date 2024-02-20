@@ -2,9 +2,12 @@ package widgets
 
 import blk "block"
 
+import buf "../buffer"
 import sty "../style"
 import lyt "../layout"
 import txt "../text"
+
+Buffer :: buf.Buffer
 
 Title    :: blk.Title
 Position :: blk.Position

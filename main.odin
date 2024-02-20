@@ -17,4 +17,9 @@ main :: proc() {
 
    using style.Color
    fmt.println(int(Color_Red), int(Color_Black))
+
+   txt := text.raw_text("foo bar")
+   defer free(txt)
+   text.debug_print_text(txt)
+
 }
