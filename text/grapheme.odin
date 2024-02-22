@@ -2,6 +2,6 @@ package text
 
 Grapheme :: struct {
    symbol: rune,
-   style:  Style,
+   style:  ^Style,
    width:  int,
 }

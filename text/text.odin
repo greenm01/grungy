@@ -18,6 +18,10 @@ raw_text :: proc(str: string) -> (text: ^Text) {
    return   
 }
 
+text_height :: proc(txt: ^Text) -> int {
+   return len(txt.lines)   
+}
+
 debug_print_text :: proc(text: ^Text) {
    for line in text.lines {
       for span in line.spans {

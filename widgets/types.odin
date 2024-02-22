@@ -18,4 +18,7 @@ Border_Set :: sty.Border_Set
 
 Alignment  :: lyt.Alignment
 
-Text :: txt.Text
+Grapheme :: txt.Grapheme
+Text     :: txt.Text
+Line     :: txt.Line
+Span     :: txt.Span
