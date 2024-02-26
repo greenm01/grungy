@@ -3,7 +3,7 @@ package text
 import "../style"
 
 Line :: struct {
-   spans:     []^Span,
+   spans:     [dynamic]^Span,
    style:     ^Style,
    alignment: Alignment,
 }
@@ -11,7 +11,8 @@ Line :: struct {
 // creates a new line with default styling, aligned left
 raw_line :: proc(str: string) -> (line: ^Line) {
    line = new(Line)
-   line.spans = []^Span{raw_span(str)}
+   line.spans = make([dynamic]^Span)
+   append(&line.spans, raw_span(str))
    line.style = style.new_style()
    line.alignment = Alignment.Left
    return

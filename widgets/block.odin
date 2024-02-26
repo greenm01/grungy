@@ -8,13 +8,12 @@ package widgets
 
 Block :: struct  {
     titles:           []Title,
-    titles_style:     Style,
+    titles_style:     ^Style,
     titles_alignment: Alignment,
     titles_position:  Position,
     borders:          Borders,
-    border_style:     Style,
+    border_style:     ^Style,
     border_set:       Border_Set,
-    style:            Style,
     padding:          Padding,
 
     widget:           Widget_List,

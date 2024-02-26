@@ -1,5 +1,7 @@
 package widgets
 
+import "core:fmt" // TODO: remove
+
 import "../text"
 
 Paragraph :: struct {
@@ -31,33 +33,39 @@ Vertical :: distinct int
 
 // Calculates the number of lines needed to render
 // Accounts for word wrapping if enabled in paragraph
-line_count :: proc(p: ^Paragraph, width: int) -> int {
+line_count :: proc(p: ^Paragraph, width: int) -> (count: int) {
     if width < 1 do return 0
 
     if p.wrap {
-        lines := make(map[int][]Grapheme)
-        aligns := make(map[int]Alignment)
+        num_lines := len(p.text.lines)
+        lines := make([][dynamic]Grapheme, num_lines)
         defer delete(lines)
-        defer delete(aligns)
+        alignments := make([]Alignment, num_lines)
+        defer delete(alignments)
         
         for line, i in p.text.lines {
-            aligns[i] = line.alignment
+            alignments[i] = line.alignment
             for span in line.spans {
-                lines[i] = text.span_to_graphemes(span)
+                append(&lines[i], ..text.span_to_graphemes(span)[:])
             }
         }
 
-        line_composer := new_word_wrapper(lines, aligns, width, p.trim)
+        line_composer := new_word_wrapper(lines, alignments, width, p.trim)
         defer del_word_wrapper(line_composer)
 
-        count: int
-        for word_wrap_next_line(line_composer) != nil {
-            count += 1
+        for wrap_next_line(line_composer) != nil do count += 1
+
+        for line in line_composer.wrapped_lines {
+            for g in line {
+                fmt.print(g.symbol)
+            }
+            fmt.println()            
         }
-        return count
-    } else {
-        return text.text_height(p.text)
-    }
+
+        return
+    } 
+    count = text.text_height(p.text)
+    return 
 }
 
 render_paragraph :: proc(p: ^Paragraph, buf: ^Buffer) {
