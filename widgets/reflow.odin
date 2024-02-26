@@ -108,12 +108,14 @@ wrap_next_line :: proc(wr: ^Word_Wrapper) -> (wl: ^Wrapped_Line) {
 
          // Append finished word to current line
          if has_seen_non_whitespace && symbol_whitespace ||
-             // Append if trimmed (whitespaces removed) word would overflow
-             word_width + symbol_width > wr.max_line_width && line_empty && wr.trim ||
-             // Append if removed whitespace would overflow -> reset whitespace counting to prevent overflow
-             whitespace_width + symbol_width > wr.max_line_width && line_empty && wr.trim ||
-             // Append if complete word would overflow
-             word_width + whitespace_width + symbol_width > wr.max_line_width && line_empty && !wr.trim
+            // Append if trimmed (whitespaces removed) word would overflow
+            word_width + symbol_width > wr.max_line_width && line_empty && wr.trim ||
+            // Append if removed whitespace would overflow -> reset whitespace counting to prevent overflow
+            whitespace_width + symbol_width > wr.max_line_width && line_empty && wr.trim ||
+            // Append if complete word would overflow
+            word_width + whitespace_width + symbol_width > wr.max_line_width && line_empty && !wr.trim ||
+            // Append if last word (no spaces after) would overflow
+            whitespace_width + word_width >= wr.max_line_width 
          {
             if !line_empty || !wr.trim {
                // Also append whitespaces if not trimming or current line is not empty
@@ -138,7 +140,6 @@ wrap_next_line :: proc(wr: ^Word_Wrapper) -> (wl: ^Wrapped_Line) {
          {
             remaining_width := wr.max_line_width - current_line_width
             append(&wrapped_lines, current_line)
-            debug_print_line(current_line)
             current_line = make([dynamic]Grapheme)
             current_line_width = 0
 
@@ -146,7 +147,8 @@ wrap_next_line :: proc(wr: ^Word_Wrapper) -> (wl: ^Wrapped_Line) {
             //if remaining_width > 0 do fmt.println("remaining =", remaining_width)
             for i in 0..=remaining_width {
                if len(unfinished_whitespaces) > 1 {
-                  ordered_remove(&unfinished_whitespaces, 0)
+                  //ordered_remove(&unfinished_whitespaces, 0)
+                  pop(&unfinished_whitespaces)
                }
             }
 
@@ -170,7 +172,7 @@ wrap_next_line :: proc(wr: ^Word_Wrapper) -> (wl: ^Wrapped_Line) {
       // Append remaining text parts
       if len(unfinished_word) > 0 || len(unfinished_whitespaces) > 0 {
          if len(current_line) == 0 && len(unfinished_word) == 0 {
-            append(&wrapped_lines, make([dynamic]Grapheme)) 
+            append(&wrapped_lines, make([dynamic]Grapheme))
          } else if !wr.trim || len(current_line) > 0 {
             append(&current_line, ..unfinished_whitespaces[:])
          }
@@ -184,7 +186,7 @@ wrap_next_line :: proc(wr: ^Word_Wrapper) -> (wl: ^Wrapped_Line) {
          // Append empty line if there was nothing to wrap in the first place
          append(&wrapped_lines, make([dynamic]Grapheme)) 
       }
-      wr.wrapped_lines = wrapped_lines
+      append(&wr.wrapped_lines, ..wrapped_lines[:])
 
    }
 
