@@ -113,9 +113,7 @@ wrap_next_line :: proc(wr: ^Word_Wrapper) -> (wl: ^Wrapped_Line) {
             // Append if removed whitespace would overflow -> reset whitespace counting to prevent overflow
             whitespace_width + symbol_width > wr.max_line_width && line_empty && wr.trim ||
             // Append if complete word would overflow
-            word_width + whitespace_width + symbol_width > wr.max_line_width && line_empty && !wr.trim ||
-            // Append if last word (no spaces after) would overflow
-            whitespace_width + word_width >= wr.max_line_width 
+            word_width + whitespace_width + symbol_width > wr.max_line_width && line_empty && !wr.trim 
          {
             if !line_empty || !wr.trim {
                // Also append whitespaces if not trimming or current line is not empty
@@ -135,8 +133,9 @@ wrap_next_line :: proc(wr: ^Word_Wrapper) -> (wl: ^Wrapped_Line) {
 
          // Append the unfinished wrapped line to wrapped lines if it is as wide as max line width
          if current_line_width >= wr.max_line_width ||
-             // or if it would be too long with the current partially processed word added
-             current_line_width + whitespace_width + word_width >= wr.max_line_width && symbol_width > 0
+            // or if it would be too long with the current partially processed word added
+            current_line_width + whitespace_width + word_width >= wr.max_line_width &&
+            symbol_width > 0 && current_line_width > 0
          {
             remaining_width := wr.max_line_width - current_line_width
             append(&wrapped_lines, current_line)
@@ -144,10 +143,8 @@ wrap_next_line :: proc(wr: ^Word_Wrapper) -> (wl: ^Wrapped_Line) {
             current_line_width = 0
 
             // Remove all whitespaces till end of just appended wrapped line + next whitespace
-            //if remaining_width > 0 do fmt.println("remaining =", remaining_width)
             for i in 0..=remaining_width {
                if len(unfinished_whitespaces) > 1 {
-                  //ordered_remove(&unfinished_whitespaces, 0)
                   pop(&unfinished_whitespaces)
                }
             }
