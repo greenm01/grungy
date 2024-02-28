@@ -100,10 +100,13 @@ wrap_next_line :: proc(wr: ^Word_Wrapper) -> (wl: ^Wrapped_Line) {
          symbol       := g.symbol
          style        := g.style
          symbol_width := g.width
+
          // Ignore characters wider than the total max width
          if symbol_width > wr.max_line_width do continue
+         // Ignore nonbreaking space
+         if symbol == NBSP do continue
 
-         symbol_whitespace := (symbol == SP && symbol != NBSP)
+         symbol_whitespace := symbol == SP
          line_empty := len(current_line) == 0
 
          // Append finished word to current line
