@@ -9,6 +9,19 @@ SP:   rune: '\x20'
 // None breaking space
 NBSP: rune: '\xA0'
 
+Zero_Width_Spaces :: []rune {
+   '\xE2',
+   '\x80',
+   '\x8b',
+}
+
+zero_space :: proc(r: rune) -> bool {
+   for s in Zero_Width_Spaces {
+      if r == s do return true
+   }
+   return false
+}
+
 Wrapped_Line :: struct {
    line: [dynamic]Grapheme,
    width: int,
