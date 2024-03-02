@@ -2,6 +2,7 @@ package widgets
 
 import "core:fmt" // TODO: remove
 
+import wc "../deps/karvi/wcwidth"
 import txt "../text"
 
 // Space
@@ -37,7 +38,7 @@ Word_Wrapper :: struct {
    input_lines:       [][dynamic]Grapheme,
    line_index:        int,
    alignments:        []Alignment,
-   wrapped_lines:     [dynamic][dynamic]Grapheme,
+   wrapped_lines:     [dynamic]Wrapped_Line,
    wrap_index:        int,
    current_alignment: Alignment,
    current_line:      [dynamic]Grapheme,
@@ -54,6 +55,7 @@ new_word_wrapper :: proc(lines: [][dynamic]Grapheme, alignments: []Alignment,
    max_line_width: int, trim: bool) -> (wr: ^Word_Wrapper) {
    wr = new(Word_Wrapper)
    wr.input_lines = lines
+   wr.wrapped_lines = make([dynamic]Wrapped_Line)
    wr.alignments = alignments
    wr.max_line_width = max_line_width
    wr.current_alignment = Alignment.Left
@@ -73,8 +75,8 @@ debug_print_line :: proc(line: [dynamic]Grapheme) {
    fmt.println()
 }
 
-wrap_next_line :: proc(wr: ^Word_Wrapper) -> (wl: ^Wrapped_Line) {
-   if wr.max_line_width <= 0 do return
+wrap_next_line :: proc(wr: ^Word_Wrapper) -> (finished: bool) {
+   if wr.max_line_width <= 0 do return true
 
    current_line: [dynamic]Grapheme
    line_width: int
@@ -83,14 +85,14 @@ wrap_next_line :: proc(wr: ^Word_Wrapper) -> (wl: ^Wrapped_Line) {
    for current_line == nil {
       num_lines := len(wr.wrapped_lines)
       // Retreive next preprossed wrapped line    
-      if num_lines > 0 && wr.wrap_index <= num_lines - 1 {
-         current_line = wr.wrapped_lines[wr.wrap_index]
+      if num_lines > 0 && wr.wrap_index < num_lines {
+         current_line = wr.wrapped_lines[wr.wrap_index].line
          line_width = len(current_line)
          break
       }
 
       // No more whole lines available -> stop repeatedly retrieving next wrapped line
-      if wr.line_index > len(wr.input_lines) - 1 do break
+      if wr.line_index == len(wr.input_lines) do return true
 
       line_symbols := wr.input_lines[wr.line_index]
       alignment := wr.alignments[wr.line_index]
@@ -98,7 +100,7 @@ wrap_next_line :: proc(wr: ^Word_Wrapper) -> (wl: ^Wrapped_Line) {
       wr.line_index += 1
       wr.current_alignment = alignment
 
-      wrapped_lines := make([dynamic][dynamic]Grapheme)
+      wrapped_lines := make([dynamic]Wrapped_Line)
       current_line = make([dynamic]Grapheme)
       current_line_width: int
       
@@ -113,7 +115,7 @@ wrap_next_line :: proc(wr: ^Word_Wrapper) -> (wl: ^Wrapped_Line) {
          symbol       := g.symbol
          style        := g.style
          symbol_width := g.width
-
+         
          // Ignore characters wider than the total max width
          if symbol_width > wr.max_line_width do continue
          // Ignore nonbreaking space
@@ -123,13 +125,13 @@ wrap_next_line :: proc(wr: ^Word_Wrapper) -> (wl: ^Wrapped_Line) {
          line_empty := len(current_line) == 0
 
          // Append finished word to current line
-         if has_seen_non_whitespace && symbol_whitespace ||
+         if (has_seen_non_whitespace && symbol_whitespace) ||
             // Append if trimmed (whitespaces removed) word would overflow
-            word_width + symbol_width > wr.max_line_width && line_empty && wr.trim ||
+            (word_width + symbol_width > wr.max_line_width && line_empty && wr.trim) ||
             // Append if removed whitespace would overflow -> reset whitespace counting to prevent overflow
-            whitespace_width + symbol_width > wr.max_line_width && line_empty && wr.trim ||
+            (whitespace_width + symbol_width > wr.max_line_width && line_empty && wr.trim) ||
             // Append if complete word would overflow
-            word_width + whitespace_width + symbol_width > wr.max_line_width && line_empty && !wr.trim 
+            (word_width + whitespace_width + symbol_width > wr.max_line_width && line_empty && !wr.trim) 
          {
             if !line_empty || !wr.trim {
                // Also append whitespaces if not trimming or current line is not empty
@@ -148,21 +150,24 @@ wrap_next_line :: proc(wr: ^Word_Wrapper) -> (wl: ^Wrapped_Line) {
          }
 
          // Append the unfinished wrapped line to wrapped lines if it is as wide as max line width
-         if current_line_width >= wr.max_line_width ||
+         if (current_line_width >= wr.max_line_width) ||
             // or if it would be too long with the current partially processed word added
-            current_line_width + whitespace_width + word_width >= wr.max_line_width &&
-            symbol_width > 0 && current_line_width > 0
+            (current_line_width + whitespace_width + word_width >= wr.max_line_width &&
+            symbol_width > 0 && current_line_width > 0)
          {
             remaining_width := wr.max_line_width - current_line_width
-            append(&wrapped_lines, current_line)
+            wcl := Wrapped_Line{current_line, current_line_width, wr.current_alignment}
+            append(&wrapped_lines, wcl)
             current_line = make([dynamic]Grapheme)
             current_line_width = 0
 
             // Remove all whitespaces till end of just appended wrapped line + next whitespace
-            for i in 0..=remaining_width {
-               if len(unfinished_whitespaces) > 1 {
-                  pop(&unfinished_whitespaces)
-               }
+            for space in unfinished_whitespaces {
+               symbol_width = wc.rune_width(space.symbol)
+               whitespace_width -= symbol_width
+               if symbol_width > remaining_width do break
+               remaining_width -= symbol_width
+               ordered_remove(&unfinished_whitespaces, 0)
             }
 
             // In case all whitespaces have been exhausted
@@ -185,7 +190,7 @@ wrap_next_line :: proc(wr: ^Word_Wrapper) -> (wl: ^Wrapped_Line) {
       // Append remaining text parts
       if len(unfinished_word) > 0 || len(unfinished_whitespaces) > 0 {
          if len(current_line) == 0 && len(unfinished_word) == 0 {
-            append(&wrapped_lines, make([dynamic]Grapheme))
+            append(&wrapped_lines, Wrapped_Line{})
          } else if !wr.trim || len(current_line) > 0 {
             append(&current_line, ..unfinished_whitespaces[:])
          }
@@ -193,26 +198,21 @@ wrap_next_line :: proc(wr: ^Word_Wrapper) -> (wl: ^Wrapped_Line) {
       }
 
       if len(current_line) > 0 {
-         append(&wrapped_lines, current_line)
+         wcl := Wrapped_Line{current_line, current_line_width, wr.current_alignment}
+         append(&wrapped_lines, wcl)
       }
       if len(wrapped_lines) == 0 {
          // Append empty line if there was nothing to wrap in the first place
-         append(&wrapped_lines, make([dynamic]Grapheme)) 
+         append(&wrapped_lines, Wrapped_Line{}) 
       }
       append(&wr.wrapped_lines, ..wrapped_lines[:])
-
+      wr.wrap_index += len(wrapped_lines)
    }
 
    if current_line != nil {
       wr.current_line = current_line
-      wr.wrap_index += 1
-   
-      wl = new(Wrapped_Line)
-      wl.line = wr.current_line
-      wl.width = line_width
-      wl.alignment = wr.current_alignment
    }
-   
+
    return
 }
 

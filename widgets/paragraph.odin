@@ -53,10 +53,10 @@ line_count :: proc(p: ^Paragraph, width: int) -> (count: int) {
         line_composer := new_word_wrapper(lines, alignments, width, p.trim)
         defer del_word_wrapper(line_composer)
 
-        for wrap_next_line(line_composer) != nil do count += 1
+        for !wrap_next_line(line_composer) do count += 1
 
         for line in line_composer.wrapped_lines {
-            for g in line {
+            for g in line.line {
                 fmt.print(g.symbol)
             }
             fmt.println()            
